@@ -2,3 +2,19 @@
 #+author: Hunter Jozwiak
 #+email: hunter.t.joz@gmail.com
 
+* Introduction
+
+This is a project to add speech to Emacs, similar in spirit to Emacspeak but doing things a bit differently.
+
+- Different Software: Instead of using Emacspeak as the engine, this project will use speechd-el to proide spoken and Braille output.
+- Community driven: bring the best of the community together to provide a solid basis for configuration.
+
+* Required software for Operation
+
+- speech-dispatcher: the software to drive various speech synthesizers.
+- synthesizer: an application to speak output; known good synthesizers are RHVoice and Espeak-NG.
+- brltty: for braille displays, if you wish to have Braille output.
+* Getting in Touch
+
+If you wish to get in touch, the best place to do so would be through the project's mailing list, which you can subscribe to at the following addresses.
+- The development mailing list: 
