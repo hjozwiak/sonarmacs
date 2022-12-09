@@ -15,6 +15,20 @@ This is a project to add speech to Emacs, similar in spirit to Emacspeak but doi
 - synthesizer: an application to speak output; known good synthesizers are RHVoice and Espeak-NG.
 - brltty: for braille displays, if you wish to have Braille output.
 * Getting in Touch
+There are a couple of mailing lists that you can join for keeping in touch with Sonarmacs as we evolve the project.
+- sonarmacs-discuss: the general discussion list.
+- sonarmacs-devel: the development mailing list, where patches will be sent to.
+- sonarmacs-announce: for announcements.
 
-If you wish to get in touch, the best place to do so would be through the project's mailing list, which you can subscribe to at the following addresses.
-- The development mailing list: 
+** Subscribing and sending Mails
+Each mailing list has a few addresses to send mail to, as documented below.
+| mailing list       | address to subscribe                               | address to communicate                  |
+|--------------------+----------------------------------------------------+-----------------------------------------|
+| sonarmacs-announce | [[mailto:~hjozwiak/sonarmacs-announce+subscribe@lists.sr.ht][~hjozwiak/sonarmacs-announce+subscribe@lists.sr.ht]] | n/a                                     |
+| sonarmacs-discuss  | [[mailto:~hjozwiak/sonarmacs-discuss+subscribe@lists.sr.ht][~hjozwiak/sonarmacs-discuss+subscribe@lists.sr.ht]]  | [[mailto:~hjozwiak/sonarmacs-discuss@lists.sr.ht][~hjozwiak/sonarmacs-discuss@lists.sr.ht]] |
+| sonarmacs-devel    | [[mailto:~hjozwiak/sonarmacs-devel+subscribe@lists.sr.ht][~hjozwiak/sonarmacs-devel+subscribe@lists.sr.ht]]    | [[mailto:~hjozwiak/sonarmacs-devel@lists.sr.ht][~hjozwiak/sonarmacs-devel@lists.sr.ht]]                                        |
+
+* Donations
+If you like the project and wish to donate, I have a few options available:
+- [[https://ko-fi.com/hunterjozwiak][Ko-fi]]
+- [[https://paypal.me/hjozwiak][PayPal]]
