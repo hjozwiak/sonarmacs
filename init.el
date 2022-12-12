@@ -51,7 +51,14 @@
   `(setup (:options ,@args)))
 
 ;; speechd-el
+(defun brltty-running-p ()
+  "Check and see if Brltty is running and the user can communicate with it.")
+
 (setup (:package speechd-el)
+  ;; Check and see if we can use Brltty at all.
+  ;; If not, we need to remove it from the list of launched modules.
+  ;; If we do not, we get an annoying error message.
+  
        (speechd-speak))
 
 ;;; init.el ends here
