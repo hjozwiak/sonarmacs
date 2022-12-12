@@ -1,4 +1,4 @@
 TODO.org
-auto-save-list/
-elpa/
-eln-cache/
+auto-save-list/*
+elpa/*
+eln-cache/*
