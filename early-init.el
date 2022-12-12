@@ -29,7 +29,7 @@
 ;; Load the newest compiled files.
 (setq load-prefer-newer 'noninteractive)
 
-;; The load path for the user's configuration.
+;; The Load path for the user's configuration.
 (defvar sonarmacs-configuration-path
   (cond
    ((featurep 'chemacs)
@@ -76,10 +76,3 @@
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
-;; Eliding the Guix configuration from crafted-emacs for now.
-
-;;; early-init.el ends here
-
-;; Local Variables:
-;; no-byte-compile: t
-;; End:
