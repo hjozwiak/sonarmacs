@@ -34,8 +34,8 @@
 (require 'package)
 (package-initialize)
 ;; Add melpa to the package archives.
-(customize-set-variable 'package-archives '((melpa . "https://melpa.org/packages/")))
-
+(customize-set-variable 'package-archives '(("melpa" . "https://melpa.org/packages/") ("gnu" . "https://elpa.gnu.org/packages/")))
+(customize-set-variable 'package-archive-priorities '(("melpa" . 10) ("gnu" . 9)))
 ;; Check and see if we need to refresh the contents.
 (unless (seq-empty-p package-archive-contents)
   (message "The package system is empty: initializing.")
@@ -51,7 +51,7 @@
   `(setup (:options ,@args)))
 
 ;; speechd-el
-(setup :package speechd-el
+(setup (:package speechd-el)
        (speechd-speak))
 
 ;;; init.el ends here
