@@ -52,6 +52,31 @@
 ;; Tack it onto the load path now.
 (add-to-list 'load-path (expand-file-name sonarmacs-configuration-path))
 
+;; If you are using nativecomp, make the buffer less spammy.
+(when (featurep 'native-compile)
+  (setq native-comp-async-report-warnings-errors nil
+        native-comp-deferred-compilation t)
+  ;; The cache recirection
+  (when (boundp 'startup-redirect-eln-cache)
+    (if (version< emacs-version "29")
+        (add-to-list 'native-comp-eln-load-path (convert-standard-file-name (expand-file-name "var/eln-cache/" user-emacs-directory)))
+      (startup-redirect-eln-cache (convert-standard-filename (expand-file-name "var/eln-cache/" user-emacs-directory)))))
+  ;; Add it to the load path
+  (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory)))
+
+;; Let's strip out some of the UI elements that we don't really need to have on at the moment.
+(setq inhibit-startup-message t
+      ;; Make the first mode fundamental for the scratch buffer
+      initial-major-mode 'fundamental-mode
+      ;; Turn off some modes
+      tool-bar-mode nil
+      menu-bar-mode nil)
+
+;; Edit the default frame alist.
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
+;; Eliding the Guix configuration from crafted-emacs for now.
 
 ;;; early-init.el ends here
 
