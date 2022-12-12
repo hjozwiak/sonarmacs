@@ -34,7 +34,7 @@
 (require 'package)
 (package-initialize)
 ;; Add melpa to the package archives.
-(customize-set-variable 'package-archives '(melpa . "https://melpa.org/packages/"))
+(customize-set-variable 'package-archives '((melpa . "https://melpa.org/packages/")))
 
 ;; Check and see if we need to refresh the contents.
 (unless (seq-empty-p package-archive-contents)
