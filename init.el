@@ -55,10 +55,13 @@
   "Check and see if Brltty is running and the user can communicate with it.")
 
 (setup (:package speechd-el)
+  (:options
   ;; Check and see if we can use Brltty at all.
   ;; If not, we need to remove it from the list of launched modules.
   ;; If we do not, we get an annoying error message.
-  
+   speechd-speak-read-command-keys nil ; Don't speak the command keys.
+   
+   speechd-speak-whole-line t)
        (speechd-speak))
 
-;;; init.el ends here
+
