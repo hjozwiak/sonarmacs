@@ -48,14 +48,14 @@
 ;; Handy macro for bulk defining customization forms.
 (defmacro csetq (&rest args)
   "A macro like setq, but works with customize options."
-  `(setup (:options ,@args)))
+  `(setup (:option ,@args)))
 
 ;; speechd-el
 (defun brltty-running-p ()
   "Check and see if Brltty is running and the user can communicate with it.")
 
 (setup (:package speechd-el)
-  (:options
+  (:option
   ;; Check and see if we can use Brltty at all.
   ;; If not, we need to remove it from the list of launched modules.
   ;; If we do not, we get an annoying error message.
