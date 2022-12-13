@@ -1,0 +1,85 @@
+#+title: Setup Details for the Top level README
+
+There are a few interesting things that you can do with SourceHut, namely sending it some GraphQL to load a custom HTML snippet as a README.
+
+* Get the Projects Available
+To do operation on sourceHut projects, one first needs the ID of the project. Get it like so.
+#+begin_src emacs-lisp
+  (defun srht-repo-id (name)
+      "Return the unique numerical id associated with every Sourehut repository."
+      (interactive "sRepo name: ")
+      (let* ((srht (car (auth-source-search :host "srht-readme")))
+             (-secret (plist-get srht :secret))
+             (srht-token (if (functionp -secret) (funcall -secret) -secret))
+             (oauth2-token (concat "Bearer " srht-token))
+             (data (request-response-data
+                    (request
+                      "https://git.sr.ht/query"
+                      :params `(("query" . ,(concat "query { me { repository (name: \"" name "\" ) { id } } }")))
+                      :type "GET"
+                      :headers `(("Authorization" . ,oauth2-token))
+                      :parser 'json-read
+                      :sync t
+                      :timeout 4
+                      :error (cl-function (lambda (&key error-thrown &allow-other-keys) (message "Error %S" error-thrown)))
+                      )))
+             (id (assoc-default
+                  'id
+                  (assoc-default
+                   'repository
+                   (assoc-default
+                    'me
+                    (assoc-default
+                     'data
+                     data
+                     ))))))
+        (progn
+          (if (called-interactively-p)
+            (message "Id: %S" id)
+          id))))
+#+end_src
+
+* Setting the ID
+You can now set the ID with this function.
+#+BEGIN_SRC emacs-lisp
+  (defun srht-set-readme (name)
+    "export the current file to html an dset the result as readme for the sourcehut repo 'NAME"
+    (interactive "sRepo name: ")
+    (srht-set-readme-with-id (srht-repo-id name)))
+#+end_src
+
+There is a helper function to set the README for a given repo by its ID.
+#+begin_src emacs-lisp
+  (defun srht-set-readme-with-id (id)
+      "Export the current file to html and set the result as readme for the
+    sourcehut repo identified by ID."
+      (interactive "sRepo id: ")
+      (let* ((srht (car (auth-source-search :host "srht-readme")))
+             (-secret (plist-get srh t :secret))
+             (srht-token (if (functionp -secret) (funcall -secret) -secret))
+             (oauth2-token (concat "Bearer " srht-token))
+             (readme.html (org-export-as (org-export-get-backend 'html) nil nil t))
+             (json-object-type 'hash-table)
+             (json-array-type 'list)
+             (json-key-type 'string)
+             (query (make-hash-table))
+             (variables (make-hash-table)))
+        (puthash "id" id variables) ; the sourcehut repo id
+        (puthash "readme" readme.html variables)
+        (puthash
+         "query"
+         "mutation UpdateRepo($id: Int!, $readme: String!) {
+        updateRepository(id: $id, input: { readme: $readme }) { id }
+      }"
+         query)
+        (puthash
+         "variables" variables query)
+
+        (request
+         "https://git.sr.ht/query"
+         :type "POST"
+         :data (json-serialize query)
+         :headers `(("Content-Type" . "application/json") ("Authorization" . ,oauth2-token))
+         :parser 'json-read
+         :complete (cl-function (lambda (&key symbol-status &allow-other-keys) (message "Set: %S" symbol-status))))))
+#+end_src
