@@ -55,7 +55,7 @@ There is a helper function to set the README for a given repo by its ID.
     sourcehut repo identified by ID."
       (interactive "sRepo id: ")
       (let* ((srht (car (auth-source-search :host "srht-readme")))
-             (-secret (plist-get srh t :secret))
+             (-secret (plist-get srht :secret))
              (srht-token (if (functionp -secret) (funcall -secret) -secret))
              (oauth2-token (concat "Bearer " srht-token))
              (readme.html (org-export-as (org-export-get-backend 'html) nil nil t))
