@@ -27,19 +27,8 @@
 ;; Hand off to loading modules.
 
 ;;; Code:
-;; Load in some libraries
-;; For sequences.
-(require 'seq)
-;; The package system.
-(require 'package)
-(package-initialize)
-;; Add melpa to the package archives.
-(customize-set-variable 'package-archives '(("melpa" . "https://melpa.org/packages/") ("gnu" . "https://elpa.gnu.org/packages/")))
-(customize-set-variable 'package-archive-priorities '(("melpa" . 10) ("gnu" . 9)))
-;; Check and see if we need to refresh the contents.
-(unless (seq-empty-p package-archive-contents)
-  (message "The package system is empty: initializing.")
-  (package-refresh-contents))
+(require 'packaging)
+(require 'setup-prepare)
 ;; Our configuration group.
 (defgroup sonarmacs '()
   "The main configuration point for Sonarmacs configuration."
@@ -49,18 +38,6 @@
   "Whether or not to load customizations from the custom file."
   :type 'boolean
   :group 'sonarmacs)
-
-;; Setup setup.el
-(unless (package-installed-p 'setup)
-  (package-install 'setup))
-
-;; Handy macro for bulk defining customization forms.
-(defmacro csetq (&rest args)
-  "A macro like setq, but works with customize options."
-  `(setup (:option ,@args)))
-
-;; speechd-el
-
 (setup (:package speechd-el)
   (:option
    speechd-speak-read-command-keys nil ; Don't speak the command keys.
@@ -68,7 +45,7 @@
        (speechd-speak))
 
 ;; User load path and other things
-(when (file-exists-p (expand-file-name "modules/" sonarmacs-configuration-path))
+(when (file-directory-p (expand-file-name "modules/" sonarmacs-configuration-path))
   (add-to-list 'load-path (expand-file-name "modules/" sonarmacs-configuration-path)))
 ;; Load in the user things.
 (when (file-exists-p (expand-file-name "config.el" sonarmacs-configuration-path))

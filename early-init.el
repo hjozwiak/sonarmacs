@@ -76,3 +76,5 @@
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
+
+(add-to-list 'load-path (expand-file-name "lib/" user-emacs-directory))
