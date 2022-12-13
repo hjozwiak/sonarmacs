@@ -27,8 +27,9 @@
 ;; Hand off to loading modules.
 
 ;;; Code:
+(require 'keymap-prepare)
 (require 'packaging)
-(require 'setup-prepare)
+(require 'use-package-prepare)
 ;; Our configuration group.
 (defgroup sonarmacs '()
   "The main configuration point for Sonarmacs configuration."
@@ -38,11 +39,6 @@
   "Whether or not to load customizations from the custom file."
   :type 'boolean
   :group 'sonarmacs)
-(setup (:package speechd-el)
-  (:option
-   speechd-speak-read-command-keys nil ; Don't speak the command keys.
-   speechd-speak-whole-line t)
-       (speechd-speak))
 
 ;; User load path and other things
 (when (file-directory-p (expand-file-name "modules/" sonarmacs-configuration-path))
