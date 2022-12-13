@@ -44,7 +44,7 @@
 (defgroup sonarmacs '()
   "The main configuration point for Sonarmacs configuration."
   :tag "Sonarmacs"
-  :parent "Emacs")
+  :group 'emacs)
 (defcustom sonarmacs-load-customization-file t
   "Whether or not to load customizations from the custom file."
   :type 'boolean
@@ -68,7 +68,7 @@
        (speechd-speak))
 
 ;; User load path and other things
-(when (file-exists-p (expand-file-path "modules/" sonarmacs-configuration-path))
+(when (file-exists-p (expand-file-name "modules/" sonarmacs-configuration-path))
   (add-to-list 'load-path (expand-file-name "modules/" sonarmacs-configuration-path)))
 ;; Load in the user things.
 (when (file-exists-p (expand-file-name "config.el" sonarmacs-configuration-path))
