@@ -40,6 +40,15 @@
 (unless (seq-empty-p package-archive-contents)
   (message "The package system is empty: initializing.")
   (package-refresh-contents))
+;; Our configuration group.
+(defgroup sonarmacs '()
+  "The main configuration point for Sonarmacs configuration."
+  :tag "Sonarmacs"
+  :parent "Emacs")
+(defcustom sonarmacs-load-customization-file t
+  "Whether or not to load customizations from the custom file."
+  :type 'boolean
+  :group 'sonarmacs)
 
 ;; Setup setup.el
 (unless (package-installed-p 'setup)
@@ -58,4 +67,14 @@
    speechd-speak-whole-line t)
        (speechd-speak))
 
-
+;; User load path and other things
+(when (file-exists-p (expand-file-path "modules/" sonarmacs-configuration-path))
+  (add-to-list 'load-path (expand-file-name "modules/" sonarmacs-configuration-path)))
+;; Load in the user things.
+(when (file-exists-p (expand-file-name "config.el" sonarmacs-configuration-path))
+  ;; Load in the config.el file.
+  (load (expand-file-name "config.el" sonarmacs-configuration-directory)))
+;; Ditto customization files.
+(customize-set-variable 'custom-file (expand-file-name "custom.el" sonarmacs-configuration-path))
+(when sonarmacs-load-customization-file
+  (load custom-file t))
