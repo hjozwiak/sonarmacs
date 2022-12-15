@@ -30,6 +30,7 @@
 (require 'packaging)
 (require 'use-package-prepare)
 (require 'keymap-prepare)
+(require 'speechd-el-prepare)
 ;; Our configuration group.
 (defgroup sonarmacs '()
   "The main configuration point for Sonarmacs configuration."
