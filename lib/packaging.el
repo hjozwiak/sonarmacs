@@ -1,4 +1,4 @@
-;;; packing.el --- Library routines for ensuring the packaging system is ready for usage.  -*- lexical-binding: t; -*-
+;;; packaging.el --- Library routines for ensuring the packaging system is ready for usage.  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2022  
 
@@ -28,7 +28,7 @@
 (require 'seq)
 (customize-set-variable 'package-archives '(("melpa" . "https://melpa.org/packages/") ("gnu" . "https://elpa.gnu.org/packages/")))
 (customize-set-variable 'package-archive-priorities '(("melpa" . 10) ("gnu" . 9)))
-(customize-set-variable 'user-package-dir (expand-file-name "elpa/" sonarmacs-configuration-path))
+(customize-set-variable 'package-user-dir (expand-file-name "elpa/" sonarmacs-configuration-path))
 (unless (file-exists-p user-package-dir)
   (mkdir user-package-dir t))
 
