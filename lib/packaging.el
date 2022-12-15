@@ -29,8 +29,8 @@
 (customize-set-variable 'package-archives '(("melpa" . "https://melpa.org/packages/") ("gnu" . "https://elpa.gnu.org/packages/")))
 (customize-set-variable 'package-archive-priorities '(("melpa" . 10) ("gnu" . 9)))
 (customize-set-variable 'package-user-dir (expand-file-name "elpa/" sonarmacs-configuration-path))
-(unless (file-exists-p user-package-dir)
-  (mkdir user-package-dir t))
+(unless (file-exists-p package-user-dir)
+  (mkdir package-user-dir t))
 
 ;; Stale archive logic.
 (defun stale-archive-p (archive)
