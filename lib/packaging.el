@@ -58,8 +58,8 @@ If there are any stale archives or the package archives don't exist at all, refr
    ((seq-empty-p package-archive-contents) (progn
     (message "The package system is not yet initialized, initializing.")
     (package-refresh-contents)))
-   (()stale-archives-exist-p) (progn
+   ((stale-archives-exist-p) (progn
                                 (message "Stale archives detected, refreshing.")
-                                (package-refresh-contents t))))
+                                (package-refresh-contents t)))))
 (provide 'packaging)
 ;;; packaging.el ends here
