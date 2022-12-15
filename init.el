@@ -28,6 +28,7 @@
 
 ;;; Code:
 (require 'packaging)
+(prepare-package-system)
 (require 'use-package-prepare)
 (require 'keymap-prepare)
 (require 'speechd-el-prepare)
