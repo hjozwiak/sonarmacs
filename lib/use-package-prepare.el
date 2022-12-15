@@ -29,7 +29,6 @@
 (customize-set-variable 'use-package-compute-statistics t)
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
-(eval-when-compile
-  (require 'use-package))
+(require 'use-package)
 (provide 'use-package-prepare)
-;;; setup-prepare.el ends here
+;;; use-package-prepare.el ends here
