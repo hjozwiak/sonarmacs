@@ -27,9 +27,9 @@
 ;; Hand off to loading modules.
 
 ;;; Code:
-(require 'keymap-prepare)
 (require 'packaging)
 (require 'use-package-prepare)
+(require 'keymap-prepare)
 ;; Our configuration group.
 (defgroup sonarmacs '()
   "The main configuration point for Sonarmacs configuration."
