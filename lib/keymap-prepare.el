@@ -36,7 +36,8 @@
   :ensure t
   :init
   (general-evil-setup))
-
+;; Aliases
+(defalias 'setc #'general-setq "A convenience alias for setting customizable variables.")
 ;; For getting information about the keybindings available.
 (use-package which-key
   :ensure t
