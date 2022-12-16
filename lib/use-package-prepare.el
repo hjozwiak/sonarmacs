@@ -1,4 +1,4 @@
-;;; setup-prepare.el --- Install and configure use-package.  -*- lexical-binding: t; -*-
+;;; use-package-prepare.el --- Install and configure use-package.  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2022  
 
@@ -20,7 +20,7 @@
 
 ;;; Commentary:
 
-;; 
+;; use-package is a macro for declaritively configuring and installing Emacs packages.
 
 ;;; Code:
 
@@ -30,5 +30,6 @@
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 (require 'use-package)
-(provide 'use-package-prepare)
+
+(defalias 'modload #'use-package)
 ;;; use-package-prepare.el ends here
