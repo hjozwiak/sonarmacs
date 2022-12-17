@@ -27,6 +27,8 @@
 
 ;; Compute the statistics for the user.
 (customize-set-variable 'use-package-compute-statistics t)
+;; Allways require things.
+(customize-set-variable 'use-package-always-demand t)
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 (require 'use-package)
