@@ -34,7 +34,7 @@
   :type 'key-sequence)
 (use-package general
   :ensure t
-  :init
+  :config
   (general-evil-setup))
 ;; Aliases
 (defalias 'setc #'general-setq "A convenience alias for setting customizable variables.")
