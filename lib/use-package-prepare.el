@@ -32,4 +32,5 @@
 (require 'use-package)
 
 (defalias 'modload #'use-package)
+(provide 'use-package-prepare)
 ;;; use-package-prepare.el ends here
