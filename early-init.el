@@ -52,8 +52,9 @@
 ;; Tack it onto the load path now.
 (add-to-list 'load-path (expand-file-name sonarmacs-configuration-path))
 (setq no-littering-etc-directory (expand-file-name "etc/" sonarmacs-configuration-path)
-      no-littering-var-directory (expand-file-name "var/" sonarmacs-configuration-path)
-        (auto-save-file-name-transforms
+      no-littering-var-directory (expand-file-name "var/" sonarmacs-configuration-path))
+(with-eval-after-load "no-littering"
+  (setq auto-save-file-name-transforms
         `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
 ;; If you are using nativecomp, make the buffer less spammy.
