@@ -24,13 +24,7 @@
 
 ;;; Code:
 (use-package no-littering
-  :ensure t
-  :custom
-  (no-littering-etc-directory (expand-file-name "etc/" sonarmacs-configuration-path))
-  (no-littering-var-directory (expand-file-name "var/" sonarmacs-configuration-path))
-  (auto-save-file-name-transforms
-        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
-
+  :ensure t)
 
 (provide 'housekeeping)
 ;;; housekeeping.el ends here

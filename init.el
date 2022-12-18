@@ -46,7 +46,6 @@
 ;; User load path and other things
 (when (file-directory-p (expand-file-name "modules/" sonarmacs-configuration-path))
   (add-to-list 'load-path (expand-file-name "modules/" sonarmacs-configuration-path)))
-;; Load in the user things.
 (when (file-exists-p (expand-file-name "config.el" sonarmacs-configuration-path))
   ;; Load in the config.el file.
   (load (expand-file-name "config.el" sonarmacs-configuration-path)))
