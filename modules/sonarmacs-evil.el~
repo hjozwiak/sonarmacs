@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2022  
 
-;; Author:  Hunter Jozwiak <hunter.t.joz@gmail.com>
+;; Author:  <sektor@tekunen>
 ;; Keywords: evil
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -36,24 +36,12 @@
   (evil-want-c-i-jump nil)
   (evil-want-keybind nil)
   (evil-undo-system 'undo-tree)
-  :preface
-  (defun sonarmacs--evil-state-change-notify ()
-    (when (and evil-next-state evil-previous-state (not (eq evil-previous-state evil-next-state)))
-      (speechd-say-text (format "Changing state from %s to %s." evil-previous-state evil-next-state) :priority 'important)))
-  :hook ((evil-insert-state-exit evil-normal-state-exit evil-motion-state-exit evil-operator-state-exit evil-replace-state-exit evil-visual-state-exit evil-emacs-state-exit) . sonarmacs--evil-state-change-notify)
-  :general
-  (:states '(normal visual insert operator replace motion)
-           speechd-speak-prefix speechd-speak-mode-map)
-  (speechd-speak-mode-map
-   "e" 'evil-scroll-line-down)
-   :init
-   (evil-mode))
+  :init
+  (evil-mode))
 
 (use-package evil-collection
   :after evil
-  :ensure t
   :config
   (evil-collection-init))
-
 (provide 'sonarmacs-evil)
 ;;; sonarmacs-evil.el ends here
