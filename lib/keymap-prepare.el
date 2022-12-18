@@ -35,6 +35,7 @@
 (use-package general
   :ensure t
   :config
+  (general-auto-unbind-keys)
   (general-evil-setup))
 ;; Aliases
 (defalias 'setc #'general-setq "A convenience alias for setting customizable variables.")

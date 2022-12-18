@@ -30,7 +30,8 @@
 (require 'packaging)
 (prepare-package-system)
 (require 'use-package-prepare)
-(require 'keymap-prepare)
+
+(require 'housekeeping)(require 'keymap-prepare)
 (require 'speechd-el-prepare)
 ;; Our configuration group.
 (defgroup sonarmacs '()
