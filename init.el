@@ -49,7 +49,7 @@
 ;; Load in the user things.
 (when (file-exists-p (expand-file-name "config.el" sonarmacs-configuration-path))
   ;; Load in the config.el file.
-  (load (expand-file-name "config.el" sonarmacs-configuration-directory)))
+  (load (expand-file-name "config.el" sonarmacs-configuration-path)))
 ;; Ditto customization files.
 (customize-set-variable 'custom-file (expand-file-name "custom.el" sonarmacs-configuration-path))
 (when sonarmacs-load-customization-file
