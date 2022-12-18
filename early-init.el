@@ -51,7 +51,8 @@
   (mkdir sonarmacs-configuration-path t))
 ;; Tack it onto the load path now.
 (add-to-list 'load-path (expand-file-name sonarmacs-configuration-path))
-
+(setq no-littering-etc-directory (expand-file-name "etc/" sonarmacs-configuration-path)
+      no-littering-var-directory (expand-file-name "var/" sonarmacs-configuration-path))
 ;; If you are using nativecomp, make the buffer less spammy.
 (when (featurep 'native-compile)
   (setq native-comp-async-report-warnings-errors nil
@@ -78,3 +79,4 @@
 (push '(vertical-scroll-bars) default-frame-alist)
 
 (add-to-list 'load-path (expand-file-name "lib/" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "modules/" user-emacs-directory))
