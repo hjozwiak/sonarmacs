@@ -31,15 +31,17 @@
   :custom
   (eldoc-echo-area-prefer-doc-buffer t)
   :config
-  (remove-from-list 'eldoc-display-functions #'eldoc-display-in-echo-area)
-  (add-to-list 'eldoc-display-functions #'eldoc-display-in-buffer)
+  (remove-hook 'eldoc-display-functions #'eldoc-display-in-echo-area)
+  (add-hook 'eldoc-display-functions #'eldoc-display-in-buffer)
   (defun sonarmacs--speak-eldoc (docs interactive)
     "Speak the eldoc documentation from the buffer.
 
 If the documentation strings are the same as before, i.e., the symbol has not changed, do not respeak them; the user can go back and view the buffer if they like."
-    (unless (and eldoc--doc-buffer (buffer-live-p eldoc--doc-buffer))
+    (when (and eldoc--doc-buffer (buffer-live-p eldoc--doc-buffer))
+      (with-current-buffer eldoc--doc-buffer
       (unless (equal docs eldoc--doc-buffer-docs)
-	(speechd-speak-read-buffer eldoc--doc-buffer))))
-  (add-to-list 'eldoc-display-functions #'sonarmacs--speak-eldoc-docs))
+        (when interactive (speechd-say-text (buffer-string) :priority 'important))))))
+  (add-hook 'eldoc-display-functions #'sonarmacs--speak-eldoc 100))
+
 (provide 'sonarmacs-programming)
 ;;; sonarmacs-programming.el ends here
