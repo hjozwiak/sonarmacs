@@ -28,20 +28,24 @@
 ;; By default, Eldoc is hella spammy and needs to be tuned down a bit.
 ;; So we will have it print to its buffer instead of to the message window, and have speechd-el autoread that buffer instead.
 (use-package eldoc
-  :custom
-  (eldoc-echo-area-prefer-doc-buffer t)
-  :config
-  (remove-hook 'eldoc-display-functions #'eldoc-display-in-echo-area)
-  (add-hook 'eldoc-display-functions #'eldoc-display-in-buffer)
+  :init
+  ;; Bookkeeping
+  (defvar sonarmacs--last-spoken-eldoc-message nil "The last documentation that we spoke.")
   (defun sonarmacs--speak-eldoc (docs interactive)
     "Speak the eldoc documentation from the buffer.
 
 If the documentation strings are the same as before, i.e., the symbol has not changed, do not respeak them; the user can go back and view the buffer if they like."
     (when (and eldoc--doc-buffer (buffer-live-p eldoc--doc-buffer))
       (with-current-buffer eldoc--doc-buffer
-      (unless (equal docs eldoc--doc-buffer-docs)
-        (when interactive (speechd-say-text (buffer-string) :priority 'important))))))
-  (add-hook 'eldoc-display-functions #'sonarmacs--speak-eldoc 100))
+      (unless (equal sonarmacs--last-spoken-eldoc-message eldoc--doc-buffer-docs)
+        (speechd-say-text (buffer-string) :priority 'important)
+        (setq sonarmacs--last-spoken-eldoc-message docs)))))
+  :ghook
+  ('eldoc-display-functions (list #'sonarmacs--speak-eldoc #'eldoc-display-in-buffer))
+  :custom
+  (eldoc-echo-area-prefer-doc-buffer t)
+  :config
+  (remove-hook 'eldoc-display-functions #'eldoc-display-in-echo-area))
 
 (provide 'sonarmacs-programming)
 ;;; sonarmacs-programming.el ends here
