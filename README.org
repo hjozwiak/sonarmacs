@@ -6,7 +6,7 @@
 
 This is a project to add speech to Emacs, similar in spirit to Emacspeak but doing things a bit differently.
 
-- Different Software :: Instead of using Emacspeak as the engine, this project will use speechd-el to proide spoken and Braille output.
+- Different Software :: Instead of using Emacspeak as the engine, this project will use speechd-el to provide spoken and Braille output.
 - Community driven :: bring the best of the community together to provide a solid basis for configuration.
 
 * Required software for Operation
@@ -45,7 +45,6 @@ Each mailing list has a few addresses to send mail to, as documented below.
 
 If you like the project and wish to donate, I have a few options available:
 - [[https://ko-fi.com/hunterjozwiak][Ko-fi]]
-- [[https://paypal.me/hjozwiak][PayPal]]
 
 # Local Variables:
 # eval: (org-babel-load-file (expand-file-name "prepare.org" user-emacs-directory))
