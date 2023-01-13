@@ -1,6 +1,6 @@
 ;;; packaging.el --- Library routines for ensuring the packaging system is ready for usage.  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2022  
+;; Copyright (C) 2022, 2023  
 
 ;; Author:  <sektor@tekunen>
 ;; Keywords: internal, lisp, maint, packaging

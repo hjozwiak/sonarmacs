@@ -1,6 +1,6 @@
 ;;; use-package-prepare.el --- Install and configure use-package.  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2022  
+;; Copyright (C) 2022, 2023  
 
 ;; Author:  Hunter Jozwiak <hunter.t.joz@gmail.com>
 ;; Keywords: internal

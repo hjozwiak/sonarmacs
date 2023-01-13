@@ -1,6 +1,6 @@
 ;;; sonarmacs-programming.el --- Programming facilities both provided and external to Emacs.  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2022  Hunter Jozwiak
+;; Copyright (C) 2022, 2023  Hunter Jozwiak
 
 ;; Author: Hunter Jozwiak <hunter.t.joz@gmail.com>
 ;; Keywords: 

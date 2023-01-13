@@ -1,6 +1,6 @@
 ;;; housekeeping.el --- Keep the configuration directories clean.  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2022  
+;; Copyright (C) 2022, 2023  
 
 ;; Author:  Hunter Jozwiak <hunter.t.joz@gmail.com
 ;; Keywords: litter, housekeeping, no-littering

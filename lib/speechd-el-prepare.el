@@ -1,6 +1,6 @@
 ;;; speechd-el-prepare.el --- Configuration for speech-dispatcher.  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2022  Hunter Jozwiak
+;; Copyright (C) 2022, 2023  Hunter Jozwiak
 
 ;; Author: Hunter Jozwiak <hunter.t.joz@gmail.com>
 ;; Keywords: 

@@ -1,6 +1,6 @@
-;;; early-init.el --- Early initialization file.     -*- lexical-binding: t; -*-
+;; early-init.el --- Early initialization file.     -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2022  Hunter Jozwiak
+;; Copyright (C) 2022, 2023  Hunter Jozwiak
 
 ;; Author: Hunter Jozwiak <hunter.t.joz@gmail.com>
 ; Keywords: initialization

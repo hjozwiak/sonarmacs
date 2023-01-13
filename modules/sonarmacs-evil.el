@@ -1,6 +1,6 @@
 ;;; sonarmacs-evil.el --- Evil configuration for Evil mode and friends.  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2022  
+;; Copyright (C) 2022, 2023  
 
 ;; Author:  Hunter Jozwiak <hunter.t.joz@gmail.com>
 ;; Keywords: evil
