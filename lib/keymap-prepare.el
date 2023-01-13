@@ -35,6 +35,7 @@
 (defcustom sonarmacs-global-prefix-key "C-SPC"
   "The prefix key to use when the main leader is unavailable."
   :group 'sonarmacs
+  :type 'key-sequence
   :tag "Global Prefix Key")
 
 (use-package general
@@ -66,6 +67,7 @@
    "ff" '(find-file :which-key "Find a file.")
    ;; Frame operations
    "F" '(:ignore t "Frames.")
+   "Fd" '(delete-frame :which-key "Delete this frame.")
    "Fo" '(other-frame :which-key "Go to another frame.")
    "h" '(:ignore t :which-key "Help")
    "hd" '(:ignore t :which-key "Describe parts of Emacs.")
@@ -73,6 +75,7 @@
    "hdB" '(general-describe-keybindings :which-key "Get a list of the key bindings that are in effect via General.")
    "hdf" '(describe-function :which-key "Describe a function.")
    "hdF" '(describe-face :which-key "Describe a face.")
+   "hdk" '(describe-key :which-key "Describe what a key is bound to.")
    "hdp" '(describe-package :which-key "Describe a package.")
    ;; Info manuals
    "hi" '(:ignore t :which-key "Info")
