@@ -10,4 +10,7 @@
 
 ;; Load in some modules.
 (modload sonarmacs-evil)
+(modload sonarmacs-git)
+(modload sonarmacs-programming)
+;; ...
 ;; Enjoy!
