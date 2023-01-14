@@ -25,7 +25,7 @@
 ;;; Code:
 
 (use-package undo-tree
-  :init
+  :config
   (global-undo-tree-mode)
   :ensure t)
 
@@ -34,7 +34,7 @@
   :custom
   (evil-want-integration t)
   (evil-want-c-i-jump nil)
-  (evil-want-keybind nil)
+  (evil-want-keybinding nil)
   (evil-undo-system 'undo-tree)
   :preface
   (defun sonarmacs--evil-state-change-notify ()
@@ -46,8 +46,11 @@
            speechd-speak-prefix speechd-speak-mode-map)
   (speechd-speak-mode-map
    "e" 'evil-scroll-line-down)
-   :init
-   (evil-mode))
+   :config
+   (evil-mode)
+  ;; Advise some commands with speech-dispatcher feedback
+  (speechd-speak--command-feedback (evil-next-line evil-previous-line evil-next-visual-line evil-previous-visual-line) after
+                                    (speechd-speak-read-line (not speechd-speak-whole-line))))
 
 (use-package evil-collection
   :after evil

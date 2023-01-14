@@ -46,6 +46,9 @@ If the documentation strings are the same as before, i.e., the symbol has not ch
   (eldoc-echo-area-prefer-doc-buffer t)
   :config
   (remove-hook 'eldoc-display-functions #'eldoc-display-in-echo-area))
-
+;; Parenthesis matching
+(use-package paren
+  :custom
+  (show-paren-delay 0))
 (provide 'sonarmacs-programming)
 ;;; sonarmacs-programming.el ends here
