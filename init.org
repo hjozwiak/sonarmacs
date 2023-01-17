@@ -2,6 +2,32 @@
 #+author: The Sonarmacs Community
 #+description: Configuration and documentation for the Sonarmacs environment
 #+language: en
+#+startup: fold
+
+* Introduction
+This is a configuration for Emacs based on the speech dispatcher software, which is a utility for providing speech output for blind and visually impaired persons. Additionally, Braille support is provided with the brltty software.
+** Required System Packages
+In order for this configuration to work, you will need to have several things installed on your system:
+- Emacs
+- speechd-dispatcher
+- brltty
+
+#+begin_note
+brltty is not a hard requirement, and at the time of this writing I have not had a Braille display to test the brltty integration; YMMV.
+#+end_note
+** Getting Around this File
+If you are reading this file in Emacs, you will have discovered that it is written in org-mode and the configuration itself is tangled from here.
+
+Here are some things to note:
+- interact with the source blocks by pressing C-', which puts you into a special edit mode
+- The sections of the document are folded, so you will need to press TAB on the section you want to see the children of.
+** Getting In Touch
+If you want to get in touch with fellow users or submit patches, here are the mailing lists.
+| name               | purpose                                       | subscribe                                          | communicate                             |
+|--------------------+-----------------------------------------------+----------------------------------------------------+-----------------------------------------|
+| sonarmacs-announce | Announcement list (will probably not be used) | [[mailto:~hjozwiak/sonarmacs-announce+subscribe@lists.sr.ht][~hjozwiak/sonarmacs-announce+subscribe@lists.sr.ht]] | n/a                                     |
+| sonarmacs-discuss  | general user discussions                      | [[mailto:~hjozwiak/sonarmacs-discuss+subscribe@lists.sr.ht][~hjozwiak/sonarmacs-discuss+subscribe@lists.sr.ht]]  | [[mailto:~hjozwiak/sonarmacs-discuss@lists.sr.ht][~hjozwiak/sonarmacs-discuss@lists.sr.ht]] |
+| sonarmacs-devel    | submit your patches here                      | [[mailto:~hjozwiak/sonarmacs-devel+subscribe@lists.sr.ht][~hjozwiak/sonarmacs-devel+subscribe@lists.sr.ht]]    | [[mailto:~hjozwiak/sonarmacs-devel@lists.sr.ht][~hjozwiak/sonarmacs-devel@lists.sr.ht]]   |
 * Early Initialization
 :properties:
 :header-args:emacs-lisp: :tangle ./early-init.el :lexical yes
@@ -19,6 +45,7 @@ For our purposes, we don't really need to have the toolbars or menu bars active 
   (push '(menu-bar-lines . 0) default-frame-alist)
   (push '(vertical-scroll-bars) default-frame-alist)
 #+end_src
+
 
 * Initialization File
 :properties:
