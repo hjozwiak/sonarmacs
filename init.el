@@ -39,7 +39,6 @@
 (setup
     (:package speechd-el)
   (:option
-   (remove speechd-out-active-drivers) 'brltty
    speechd-speak-whole-line t
    speechd-speak-echo nil
    speechd-speak-read-command-keys nil
