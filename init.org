@@ -1,0 +1,80 @@
+#+title: The Sonarmacs Environment
+#+author: The Sonarmacs Community
+#+description: Configuration and documentation for the Sonarmacs environment
+#+language: en
+* Early Initialization
+:properties:
+:header-args:emacs-lisp: :tangle ./early-init.el :lexical yes
+:END:
+
+There are a few things that one might want to do before Emacs starts loading the initialization file, such as customizing the initial frame, increasing the garbage collection threshhold, etc.
+** Disable Some UI Elements
+For our purposes, we don't really need to have the toolbars or menu bars active by default. If you should want to use something that is provided in the menu bars, you can get at them with F10.
+#+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
+  (setq inhibit-startup-message t
+  toolbar-mode nil
+  menu-bar-mode nil)
+  (push '(tool-bar-lines . 0) default-frame-alist)
+  (push '(menu-bar-lines . 0) default-frame-alist)
+  (push '(vertical-scroll-bars) default-frame-alist)
+#+end_src
+
+* Initialization File
+:properties:
+:header-args:emacs-lisp: :tangle ./init.el :lexical yes
+:END:
+
+Here is where the bulk of the initialization takes place, in a file called init.el.
+
+There are many ways in which to customize Emacs:
+- some prefer to modularize the configuration
+- Some like to have a literate config
+- Or maybe have one giant configuration file.
+
+The initial configuration will be a literate config. In so doing, we can both provide the code that Emacs Will run in addition to providing further user-facing documentation.
+** The Package System
+*** Configuring Sources
+There are three package sources that we use by default:
+- Melpa :: The place that has the most packages, which I have been using for years now.
+- ELPA :: The GNU packages.
+- non-GNU ELPA :: The repository for packages that don't quite meet the FSF guidelines.
+
+#+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+  #+end_src
+*** Set the Priorities
+#+begin_src emacs-lisp
+  (customize-set-variable 'package-archive-priorities '(("melpa" . 10) ("gnu" . 9) ("nongnu" . 8)))
+#+end_src
+** Setup Installation
+#+begin_src emacs-lisp
+  (unless (package-installed-p 'setup)
+    (package-install 'setup))
+  (require 'setup)
+#+end_src
+** speechd-el
+The configuration of speechd-el is quite immense, so this section is meant more as a guide as to how to do it rather than something that is set in stone; feel free to tweak things to your liking.
+#+begin_src emacs-lisp
+    (setup
+	(:package speechd-el)
+      (:option
+       speechd-speak-whole-line t
+       speechd-speak-echo nil
+       speechd-speak-read-command-keys nil
+       speechd-speak-voices '((nil
+			       (rate . 100)
+			       (output-module . "espeak-ng"))))
+      (speechd-speak))
+#+end_src
+** No Littering
+By default, Emacs will pollute your configuration directory with various auto-save, cache and configuration files. The aim of the no littering package is to keep the configuration directory relatively clean, by putting persistant information into the var subdirectory and configuration files in etc.
+#+begin_src emacs-lisp
+  (setup
+      (:package no-littering)
+  (:option
+    auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))
+  custom-file (no-littering-expand-etc-file-name "custom.el"))))
+#+end_src
