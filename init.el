@@ -42,7 +42,7 @@
    speechd-speak-whole-line t
    speechd-speak-echo nil
    speechd-speak-read-command-keys nil
-   speechd-speak-voices '((nil
+   speechd-voices '((nil
 			   (rate . 100)
 			   (output-module . "espeak-ng"))))
   (speechd-speak))
