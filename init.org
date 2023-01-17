@@ -82,26 +82,67 @@ There are three package sources that we use by default:
     (package-install 'setup))
   (require 'setup)
 #+end_src
+*** Some Definers
+**** Run Code After Init
+There is a hook called after-init-hook that you can use to run code after Emacs has finished initializing.
+#+begin_src emacs-lisp
+  (setup-define :after-init
+    (lambda (&rest body)
+      `(if after-init-time (progn ,@body) (add-hook 'after-init-hook (lambda () ,@body)))
+    :documentation "Run the specified body after Emacs has finished initializing."
+    :signature '(body ...))
+#+end_src
+**** Run Code After the First Frame is Made
+This is particularly useful if you run Emacs as a daemon and you would like to launch a particular package (the speedbar, for example) when you open your first frame in either the GUI or TTY.
+#+begin_src emacs-lisp
+  (setup-define :after-gui
+    (lambda (&rest body)
+      `(if (and (not (daemonp)) (display-graphic-p))
+	   (progn ,@body)
+	 (add-hook 'server-after-make-frame-hook (lambda ()
+						   (when (display-graphic-p)
+						     ,@body
+						     t)))))
+    :documentation "Run body after the first graphical frame is created."
+    :signature '(BODY ...))
+
+  (setup-define :after-tty
+    (lambda (&rest body)
+      `(if (and (not (daemonp)) (not (display-graphic-p)))
+	   (progn ,@body)
+	 (add-hook 'server-after-make-frame-hook (lambda ()
+						   (unless (display-graphic-p)
+						     ,@body
+						     t)))))
+    :documentation "Run body after the first TTY frame is created."
+    :signature '(body ...))
+#+end_src
 ** speechd-el
 The configuration of speechd-el is quite immense, so this section is meant more as a guide as to how to do it rather than something that is set in stone; feel free to tweak things to your liking.
 #+begin_src emacs-lisp
-    (setup
-	(:package speechd-el)
-      (:option
-       speechd-speak-whole-line t
-       speechd-speak-echo nil
-       speechd-speak-read-command-keys nil
-       speechd-speak-voices '((nil
-			       (rate . 100)
-			       (output-module . "espeak-ng"))))
-      (speechd-speak))
+  (setup
+      (:package speechd-el)
+    (:option
+     (remove speechd-out-active-drivers) 'brltty
+     speechd-speak-whole-line t
+     speechd-speak-echo nil
+     speechd-speak-read-command-keys nil
+     speechd-speak-voices '((nil
+			     (rate . 100)
+			     (output-module . "espeak-ng"))))
+    (speechd-speak))
 #+end_src
 ** No Littering
 By default, Emacs will pollute your configuration directory with various auto-save, cache and configuration files. The aim of the no littering package is to keep the configuration directory relatively clean, by putting persistant information into the var subdirectory and configuration files in etc.
 #+begin_src emacs-lisp
   (setup
       (:package no-littering)
+    (:require no-littering)
   (:option
     auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))
   custom-file (no-littering-expand-etc-file-name "custom.el"))))
 #+end_src
+
+# Local Variables:
+# eval: (add-hook 'before-save-hook #'org-babel-tangle nil t)
+# End:
