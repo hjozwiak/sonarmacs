@@ -8,6 +8,9 @@
   (package-install 'setup))
 (require 'setup)
 
+(defmacro setc (&rest things)
+  `(setup (:option ,@things)))
+
 (setup-define :after-init
   (lambda (&rest body)
     `(if after-init-time (progn ,@body) (add-hook 'after-init-hook (lambda () ,@body)))
@@ -68,6 +71,12 @@ Usually it is the form of speechd-speak-read-<thing>"
 	     :documentation ,doc
 	     :signature '(command ...))))
 
+(setup-define :line-feedback
+  (lambda (&rest funcs)
+    `(speechd-speak-command-feedback ,funcs after (speechd-speak-read-line (not speechd-speak-whole-line))))
+  :documentation "Advise the functions that move by lines to report the new line after execution."
+  :signature '(COMMAND ...))
+
 (setup
     (:package no-littering)
   (:require no-littering)
@@ -75,8 +84,10 @@ Usually it is the form of speechd-speak-read-<thing>"
   auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))
 custom-file (no-littering-expand-etc-file-name "custom.el"))))
 
-(setup-define :line-feedback
-  (lambda (&rest funcs)
-    `(speechd-speak-command-feedback ,funcs after (speechd-speak-read-line (not speechd-speak-whole-line))))
-  :documentation "Advise the functions that move by lines to report the new line after execution."
-  :signature '(COMMAND ...))
+(setc user-full-name "Hunter Jozwiak"
+      user-mail-address "hunter.t.joz@gmail.com"
+      user-login-name "sektor")
+
+(setc indent-tabs-mode nil)
+
+

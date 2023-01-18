@@ -82,6 +82,12 @@ There are three package sources that we use by default:
     (package-install 'setup))
   (require 'setup)
 #+end_src
+*** User Option Setting Macro
+Until we get the setopt macro, we can leverage setup to bulk set options for us.
+#+begin_src emacs-lisp
+  (defmacro setc (&rest things)
+    `(setup (:option ,@things)))
+#+end_src
 *** Some Definers
 **** Run Code After Init
 There is a hook called after-init-hook that you can use to run code after Emacs has finished initializing.
@@ -159,6 +165,16 @@ For most entities, we can get away with just calling the function, since they do
 	       :documentation ,doc
 	       :signature '(command ...))))
 #+end_src
+**** Line Motion
+For the special case of line motion, we need to take into the account the variable speechd-speak-whole-line which I set to t because the initial setting confused me.
+#+begin_src emacs-lisp
+  (setup-define :line-feedback
+    (lambda (&rest funcs)
+      `(speechd-speak-command-feedback ,funcs after (speechd-speak-read-line (not speechd-speak-whole-line))))
+    :documentation "Advise the functions that move by lines to report the new line after execution."
+    :signature '(COMMAND ...))
+#+end_src
+
 ** No Littering
 By default, Emacs will pollute your configuration directory with various auto-save, cache and configuration files. The aim of the no littering package is to keep the configuration directory relatively clean, by putting persistant information into the var subdirectory and configuration files in etc.
 #+begin_src emacs-lisp
@@ -170,15 +186,25 @@ By default, Emacs will pollute your configuration directory with various auto-sa
   custom-file (no-littering-expand-etc-file-name "custom.el"))))
 #+end_src
 
+** Emacs Internals
+*** User Information
+Tell Emacs who you are, as well as some other things.
+#+begin_src emacs-lisp
+  (setc user-full-name "Hunter Jozwiak"
+	user-mail-address "hunter.t.joz@gmail.com"
+	user-login-name "sektor")
+#+end_src
+*** Basic Programming Things
+**** No Indent of Tabs
+I don't really care for tabs, so let's turn it off.
+#+begin_src emacs-lisp
+(setc indent-tabs-mode nil)
+#+end_src
+**** Eldoc Tweaks
+By default, Eldoc is really spammy. Let's have it write to a buffer instead, and read from that buffer when things are changed.
+#+begin_src emacs-lisp
+#+end_src
+
 # Local Variables:
 # eval: (add-hook 'before-save-hook #'org-babel-tangle nil t)
 # End:
-**** Line Motion
-For the special case of line motion, we need to take into the account the variable speechd-speak-whole-line which I set to t because the initial setting confused me.
-#+begin_src emacs-lisp
-  (setup-define :line-feedback
-    (lambda (&rest funcs)
-      `(speechd-speak-command-feedback ,funcs after (speechd-speak-read-line (not speechd-speak-whole-line))))
-    :documentation "Advise the functions that move by lines to report the new line after execution."
-    :signature '(COMMAND ...))
-#+end_src
