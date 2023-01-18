@@ -173,3 +173,12 @@ By default, Emacs will pollute your configuration directory with various auto-sa
 # Local Variables:
 # eval: (add-hook 'before-save-hook #'org-babel-tangle nil t)
 # End:
+**** Line Motion
+For the special case of line motion, we need to take into the account the variable speechd-speak-whole-line which I set to t because the initial setting confused me.
+#+begin_src emacs-lisp
+  (setup-define :line-feedback
+    (lambda (&rest funcs)
+      `(speechd-speak-command-feedback ,funcs after (speechd-speak-read-line (not speechd-speak-whole-line))))
+    :documentation "Advise the functions that move by lines to report the new line after execution."
+    :signature '(COMMAND ...))
+#+end_src

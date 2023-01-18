@@ -74,3 +74,9 @@ Usually it is the form of speechd-speak-read-<thing>"
 (:option
   auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))
 custom-file (no-littering-expand-etc-file-name "custom.el"))))
+
+(setup-define :line-feedback
+  (lambda (&rest funcs)
+    `(speechd-speak-command-feedback ,funcs after (speechd-speak-read-line (not speechd-speak-whole-line))))
+  :documentation "Advise the functions that move by lines to report the new line after execution."
+  :signature '(COMMAND ...))
