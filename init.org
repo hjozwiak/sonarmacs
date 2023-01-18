@@ -98,22 +98,22 @@ This is particularly useful if you run Emacs as a daemon and you would like to l
   (setup-define :after-gui
     (lambda (&rest body)
       `(if (and (not (daemonp)) (display-graphic-p))
-	   (progn ,@body)
-	 (add-hook 'server-after-make-frame-hook (lambda ()
-						   (when (display-graphic-p)
-						     ,@body
-						     t)))))
+           (progn ,@body)
+         (add-hook 'server-after-make-frame-hook (lambda ()
+                                                   (when (display-graphic-p)
+                                                     ,@body
+                                                     t)))))
     :documentation "Run body after the first graphical frame is created."
     :signature '(BODY ...))
 
   (setup-define :after-tty
     (lambda (&rest body)
       `(if (and (not (daemonp)) (not (display-graphic-p)))
-	   (progn ,@body)
-	 (add-hook 'server-after-make-frame-hook (lambda ()
-						   (unless (display-graphic-p)
-						     ,@body
-						     t)))))
+           (progn ,@body)
+         (add-hook 'server-after-make-frame-hook (lambda ()
+                                                   (unless (display-graphic-p)
+                                                     ,@body
+                                                     t)))))
     :documentation "Run body after the first TTY frame is created."
     :signature '(body ...))
 #+end_src
@@ -127,9 +127,37 @@ The configuration of speechd-el is quite immense, so this section is meant more 
      speechd-speak-echo nil
      speechd-speak-read-command-keys nil
      speechd-voices '((nil
-			     (rate . 100)
-			     (output-module . "espeak-ng"))))
+                             (rate . 100)
+                             (output-module . "espeak-ng"))))
     (speechd-speak))
+#+end_src
+*** Helper Functions
+**** Retrieve a Reading Function
+In order to make definers for setup, we need to first make functions that will return functions that are defined in speechd-speak. For example, the reading functions speechd-speak-read-paragraph, sentence, etc.
+#+begin_src emacs-lisp
+  (defun retrieve-speechd-function (thing)
+    "Retrieve the function that is defined by speechd-el.
+
+  Usually it is the form of speechd-speak-read-<thing>"
+    (cl-loop for s being the symbols
+	     when (string-match (concat "speechd-speak-read-" thing) (symbol-name s))
+	     when (fboundp s)
+	     return s))
+#+end_src
+**** Post Motion Feedback Defining Macro
+For most entities, we can get away with just calling the function, since they don't really take any arguments. The one exception I've found thus far is speechd-speak-read-line, who wants an argument whether or not to read the whole line; we will deal with this case later.
+#+begin_src emacs-lisp
+  (cl-loop for ent in '("paragraph" "sentence" "word" "character" "sexp")
+	   for doc = (format "Advise the functions that move by %s to report the new %s after movement." ent ent)
+	   for setup-name = (intern (concat ":" ent "-feedback"))
+	   for speechd-command = (retrieve-speechd-function ent)
+	   when (fboundp speechd-command) do
+	   (eval
+	    `(setup-define ,setup-name
+	       (lambda (&rest funcs)
+		 `(speechd-speak--command-feedback ,funcs after (funcall speechd-command)))
+	       :documentation ,doc
+	       :signature '(command ...))))
 #+end_src
 ** No Littering
 By default, Emacs will pollute your configuration directory with various auto-save, cache and configuration files. The aim of the no littering package is to keep the configuration directory relatively clean, by putting persistant information into the var subdirectory and configuration files in etc.

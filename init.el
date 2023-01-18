@@ -17,22 +17,22 @@
 (setup-define :after-gui
   (lambda (&rest body)
     `(if (and (not (daemonp)) (display-graphic-p))
-	 (progn ,@body)
+         (progn ,@body)
        (add-hook 'server-after-make-frame-hook (lambda ()
-						 (when (display-graphic-p)
-						   ,@body
-						   t)))))
+                                                 (when (display-graphic-p)
+                                                   ,@body
+                                                   t)))))
   :documentation "Run body after the first graphical frame is created."
   :signature '(BODY ...))
 
 (setup-define :after-tty
   (lambda (&rest body)
     `(if (and (not (daemonp)) (not (display-graphic-p)))
-	 (progn ,@body)
+         (progn ,@body)
        (add-hook 'server-after-make-frame-hook (lambda ()
-						 (unless (display-graphic-p)
-						   ,@body
-						   t)))))
+                                                 (unless (display-graphic-p)
+                                                   ,@body
+                                                   t)))))
   :documentation "Run body after the first TTY frame is created."
   :signature '(body ...))
 
@@ -43,9 +43,30 @@
    speechd-speak-echo nil
    speechd-speak-read-command-keys nil
    speechd-voices '((nil
-			   (rate . 100)
-			   (output-module . "espeak-ng"))))
+                           (rate . 100)
+                           (output-module . "espeak-ng"))))
   (speechd-speak))
+
+(defun retrieve-speechd-function (thing)
+  "Retrieve the function that is defined by speechd-el.
+
+Usually it is the form of speechd-speak-read-<thing>"
+  (cl-loop for s being the symbols
+	   when (string-match (concat "speechd-speak-read-" thing) (symbol-name s))
+	   when (fboundp s)
+	   return s))
+
+(cl-loop for ent in '("paragraph" "sentence" "word" "character" "sexp")
+	 for doc = (format "Advise the functions that move by %s to report the new %s after movement." ent ent)
+	 for setup-name = (intern (concat ":" ent "-feedback"))
+	 for speechd-command = (retrieve-speechd-function ent)
+	 when (fboundp speechd-command) do
+	 (eval
+	  `(setup-define ,setup-name
+	     (lambda (&rest funcs)
+	       `(speechd-speak--command-feedback ,funcs after (funcall speechd-command)))
+	     :documentation ,doc
+	     :signature '(command ...))))
 
 (setup
     (:package no-littering)
