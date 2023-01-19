@@ -76,66 +76,26 @@ There are three package sources that we use by default:
 #+begin_src emacs-lisp
   (customize-set-variable 'package-archive-priorities '(("melpa" . 10) ("gnu" . 9) ("nongnu" . 8)))
 #+end_src
-** Setup Installation
+** use-package Installation
 #+begin_src emacs-lisp
-  (unless (package-installed-p 'setup)
-    (package-install 'setup))
-  (require 'setup)
-#+end_src
-*** User Option Setting Macro
-Until we get the setopt macro, we can leverage setup to bulk set options for us.
-#+begin_src emacs-lisp
-  (defmacro setc (&rest things)
-    `(setup (:option ,@things)))
-#+end_src
-*** Some Definers
-**** Run Code After Init
-There is a hook called after-init-hook that you can use to run code after Emacs has finished initializing.
-#+begin_src emacs-lisp
-  (setup-define :after-init
-    (lambda (&rest body)
-      `(if after-init-time (progn ,@body) (add-hook 'after-init-hook (lambda () ,@body)))
-    :documentation "Run the specified body after Emacs has finished initializing."
-    :signature '(body ...))
-#+end_src
-**** Run Code After the First Frame is Made
-This is particularly useful if you run Emacs as a daemon and you would like to launch a particular package (the speedbar, for example) when you open your first frame in either the GUI or TTY.
-#+begin_src emacs-lisp
-  (setup-define :after-gui
-    (lambda (&rest body)
-      `(if (and (not (daemonp)) (display-graphic-p))
-           (progn ,@body)
-         (add-hook 'server-after-make-frame-hook (lambda ()
-                                                   (when (display-graphic-p)
-                                                     ,@body
-                                                     t)))))
-    :documentation "Run body after the first graphical frame is created."
-    :signature '(BODY ...))
-
-  (setup-define :after-tty
-    (lambda (&rest body)
-      `(if (and (not (daemonp)) (not (display-graphic-p)))
-           (progn ,@body)
-         (add-hook 'server-after-make-frame-hook (lambda ()
-                                                   (unless (display-graphic-p)
-                                                     ,@body
-                                                     t)))))
-    :documentation "Run body after the first TTY frame is created."
-    :signature '(body ...))
+  (unless (package-installed-p 'use-package)
+    (package-install ''use-package))
+  (require 'use-package)
 #+end_src
 ** speechd-el
 The configuration of speechd-el is quite immense, so this section is meant more as a guide as to how to do it rather than something that is set in stone; feel free to tweak things to your liking.
 #+begin_src emacs-lisp
-  (setup
-      (:package speechd-el)
-    (:option
-     speechd-speak-whole-line t
-     speechd-speak-echo nil
-     speechd-speak-read-command-keys nil
-     speechd-voices '((nil
-                             (rate . 100)
-                             (output-module . "espeak-ng"))))
-    (speechd-speak))
+  (use-package speechd-el
+    :ensure t
+    :custom
+     (speechd-speak-whole-line t)
+     (speechd-speak-echo nil)
+     (speechd-speak-read-command-keys nil)
+     (speechd-voices '((nil
+			     (rate . 100)
+			     (output-module . "espeak-ng"))))
+  :init
+  (speechd-speak))
 #+end_src
 *** Helper Functions
 **** Retrieve a Reading Function
@@ -150,42 +110,76 @@ In order to make definers for setup, we need to first make functions that will r
 	     when (fboundp s)
 	     return s))
 #+end_src
-**** Post Motion Feedback Defining Macro
-For most entities, we can get away with just calling the function, since they don't really take any arguments. The one exception I've found thus far is speechd-speak-read-line, who wants an argument whether or not to read the whole line; we will deal with this case later.
-#+begin_src emacs-lisp
-  (cl-loop for ent in '("paragraph" "sentence" "word" "character" "sexp")
-	   for doc = (format "Advise the functions that move by %s to report the new %s after movement." ent ent)
-	   for setup-name = (intern (concat ":" ent "-feedback"))
-	   for speechd-command = (retrieve-speechd-function ent)
-	   when (fboundp speechd-command) do
-	   (eval
-	    `(setup-define ,setup-name
-	       (lambda (&rest funcs)
-		 `(speechd-speak--command-feedback ,funcs after (funcall speechd-command)))
-	       :documentation ,doc
-	       :signature '(command ...))))
-#+end_src
-**** Line Motion
-For the special case of line motion, we need to take into the account the variable speechd-speak-whole-line which I set to t because the initial setting confused me.
-#+begin_src emacs-lisp
-  (setup-define :line-feedback
-    (lambda (&rest funcs)
-      `(speechd-speak-command-feedback ,funcs after (speechd-speak-read-line (not speechd-speak-whole-line))))
-    :documentation "Advise the functions that move by lines to report the new line after execution."
-    :signature '(COMMAND ...))
-#+end_src
-
 ** No Littering
 By default, Emacs will pollute your configuration directory with various auto-save, cache and configuration files. The aim of the no littering package is to keep the configuration directory relatively clean, by putting persistant information into the var subdirectory and configuration files in etc.
 #+begin_src emacs-lisp
-  (setup
-      (:package no-littering)
-    (:require no-littering)
-  (:option
-    auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))
-  custom-file (no-littering-expand-etc-file-name "custom.el"))))
+  (use-package no-littering
+    :ensure t
+    :demand t
+    :custom
+    (auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+    (custom-file (no-littering-expand-etc-file-name "custom.el"))))
 #+end_src
-
+** Which Key
+As you input keys into Emacs, which-key will interactively filter the currently available options and present the commands and their keybindings.
+#+begin_src emacs-lisp
+  (use-package which-key
+    :ensure t
+    :custom
+    (which-key-idle-delay 1)
+    :init
+    (which-key-mode))
+#+end_src
+** General.el
+General is a nifty utility for easily defining keybindings, as well as having some useful utilities for running code after initialization of Emacs, after the first GUI and/or TTY frame is created, and setting custom user options.
+#+begin_src emacs-lisp
+  (use-package general
+    :ensure t
+    :config
+    (general-auto-unbind-keys)
+    (general-evil-setup t)
+    ;; Create the leader definer
+    (general-create-definer mapleader
+      :prefix "SPC"
+      :global-prefix "C-SPC"
+      :states '(normal visual insert emacs))
+    (mapleader
+     "b" '(:ignore t :which-key "Buffer operations")
+     "bn" '(next-buffer :which-key "Go to the next buffer.")
+     "bp" '(previous-buffer :which-key "Go to the previous buffer.")
+     "bb" '(switch-to-buffer :which-key "Switch to a buffer.")
+     "bi" '(ibuffer :which-key "Interactive buffer management through the Ibuffer interface.")
+     "br" '(revert-buffer :which-key "Revert the buffer to how it is on disk.")
+     ;; Customization
+     "c" '(:ignore t :which-key "Customization interface.")
+     "cc" '(customize :which-key "Open the customization index.")
+     "cf" '(customize-face :which-key "Customize a face.")
+     "cg" '(customize-group :which-key "Customize a specific group.")
+     "cv" '(customize-variable :which-key "Customize a variable in the custom interface.")
+     "cV" '(customize-set-variable :which-key "Expert level variable setting, sans interface.")
+     "f" '(:ignore t :which-key "File operations.")
+     "fs" '(save-buffer :which-key "Save your currently opened file.")
+     "ff" '(find-file :which-key "Find a file.")
+     ;; Frame operations
+     "F" '(:ignore t "Frames.")
+     "Fd" '(delete-frame :which-key "Delete this frame.")
+     "Fo" '(other-frame :which-key "Go to another frame.")
+     "h" '(:ignore t :which-key "Help")
+     "hd" '(:ignore t :which-key "Describe parts of Emacs.")
+     "hdb" '(describe-bindings :which-key "Describe the keybindings that are in effect right now.")
+     "hdB" '(general-describe-keybindings :which-key "Get a list of the key bindings that are in effect via General.")
+     "hdf" '(describe-function :which-key "Describe a function.")
+     "hdF" '(describe-face :which-key "Describe a face.")
+     "hdk" '(describe-key :which-key "Describe what a key is bound to.")
+     "hdp" '(describe-package :which-key "Describe a package.")
+     ;; Info manuals
+     "hi" '(:ignore t :which-key "Info")
+     "hia" '(info-apropos :which-key "Search the info database.")
+     "hii" '(info-index :which-key "Open the info index.")
+     "him" '(info-display-manual :which-key "Open a specific info manual.")))
+  ;; Aliases
+  (defalias 'setc #'general-setq "A convenience alias for setting customizable variables.")
+#+end_src
 ** Emacs Internals
 *** User Information
 Tell Emacs who you are, as well as some other things.
