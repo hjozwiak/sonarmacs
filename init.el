@@ -34,7 +34,7 @@ Usually it is the form of speechd-speak-read-<thing>"
   :demand t
   :custom
   (auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
-  (custom-file (no-littering-expand-etc-file-name "custom.el"))))
+  (custom-file (no-littering-expand-etc-file-name "custom.el")))
 
 (use-package which-key
   :ensure t

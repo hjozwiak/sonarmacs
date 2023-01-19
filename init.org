@@ -118,7 +118,7 @@ By default, Emacs will pollute your configuration directory with various auto-sa
     :demand t
     :custom
     (auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
-    (custom-file (no-littering-expand-etc-file-name "custom.el"))))
+    (custom-file (no-littering-expand-etc-file-name "custom.el")))
 #+end_src
 ** Which Key
 As you input keys into Emacs, which-key will interactively filter the currently available options and present the commands and their keybindings.
