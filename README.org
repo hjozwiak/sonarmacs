@@ -22,7 +22,7 @@ Here are some things to note:
 - interact with the source blocks by pressing C-', which puts you into a special edit mode
 - The sections of the document are folded, so you will need to press TAB on the section you want to see the children of.
 ** Getting In Touch
-This repository is now hosted on Github, so you can submit pull requests and file issues there.
+This repository is now hosted on Github, so you can [[https://github.com/hjozwiak/sonarmacs/compare][submit pull requests]] and [[https://github.com/hjozwiak/sonarmacs/issues/new][file issues]] there.
 
 * Early Initialization
 :properties:
