@@ -39,7 +39,7 @@ Usually it is the form of speechd-speak-read-<thing>"
 (use-package which-key
   :ensure t
   :custom
-  (which-key-idle-delay 1)
+  (which-key-idle-delay 0.1)
   :init
   (which-key-mode))
 
