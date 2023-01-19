@@ -15,8 +15,8 @@
    (speechd-speak-echo nil)
    (speechd-speak-read-command-keys nil)
    (speechd-voices '((nil
-			   (rate . 100)
-			   (output-module . "espeak-ng"))))
+                           (rate . 100)
+                           (output-module . "espeak-ng"))))
 :init
 (speechd-speak))
 
@@ -25,13 +25,14 @@
 
 Usually it is the form of speechd-speak-read-<thing>"
   (cl-loop for s being the symbols
-	   when (string-match (concat "speechd-speak-read-" thing) (symbol-name s))
-	   when (fboundp s)
-	   return s))
+           when (string-match (concat "speechd-speak-read-" thing) (symbol-name s))
+           when (fboundp s)
+           return s))
 
 (use-package no-littering
   :ensure t
   :demand t
+  :hook (after-init . (lambda () (load custom-file)))
   :custom
   (auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
   (custom-file (no-littering-expand-etc-file-name "custom.el")))
@@ -95,6 +96,6 @@ Usually it is the form of speechd-speak-read-<thing>"
       user-mail-address "hunter.t.joz@gmail.com"
       user-login-name "sektor")
 
-(setc indent-tabs-mode nil)
+(indent-tabs-mode nil)
 
 

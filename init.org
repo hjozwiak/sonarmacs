@@ -88,8 +88,8 @@ The configuration of speechd-el is quite immense, so this section is meant more 
      (speechd-speak-echo nil)
      (speechd-speak-read-command-keys nil)
      (speechd-voices '((nil
-			     (rate . 100)
-			     (output-module . "espeak-ng"))))
+                             (rate . 100)
+                             (output-module . "espeak-ng"))))
   :init
   (speechd-speak))
 #+end_src
@@ -102,9 +102,9 @@ In order to make definers for use-package, we need to first make functions that 
 
   Usually it is the form of speechd-speak-read-<thing>"
     (cl-loop for s being the symbols
-	     when (string-match (concat "speechd-speak-read-" thing) (symbol-name s))
-	     when (fboundp s)
-	     return s))
+             when (string-match (concat "speechd-speak-read-" thing) (symbol-name s))
+             when (fboundp s)
+             return s))
 #+end_src
 ** No Littering
 By default, Emacs will pollute your configuration directory with various auto-save, cache and configuration files. The aim of the no littering package is to keep the configuration directory relatively clean, by putting persistant information into the var subdirectory and configuration files in etc.
@@ -112,6 +112,7 @@ By default, Emacs will pollute your configuration directory with various auto-sa
   (use-package no-littering
     :ensure t
     :demand t
+    :hook (after-init . (lambda () (load custom-file)))
     :custom
     (auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
     (custom-file (no-littering-expand-etc-file-name "custom.el")))
@@ -182,14 +183,14 @@ General is a nifty utility for easily defining keybindings, as well as having so
 Tell Emacs who you are, as well as some other things.
 #+begin_src emacs-lisp
   (setc user-full-name "Hunter Jozwiak"
-	user-mail-address "hunter.t.joz@gmail.com"
-	user-login-name "sektor")
+        user-mail-address "hunter.t.joz@gmail.com"
+        user-login-name "sektor")
 #+end_src
 *** Basic Programming Things
 **** No Indent of Tabs
 I don't really care for tabs, so let's turn it off.
 #+begin_src emacs-lisp
-(setc indent-tabs-mode nil)
+  (indent-tabs-mode nil)
 #+end_src
 **** Eldoc Tweaks
 By default, Eldoc is really spammy. Let's have it write to a buffer instead, and read from that buffer when things are changed.
