@@ -45,6 +45,7 @@ Usually it is the form of speechd-speak-read-<thing>"
 
 (use-package general
   :ensure t
+  :demand t
   :config
   (general-auto-unbind-keys)
   (general-evil-setup t)
