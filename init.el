@@ -40,7 +40,9 @@ Usually it is the form of speechd-speak-read-<thing>"
 (use-package which-key
   :ensure t
   :custom
-  (which-key-idle-delay 0.1)
+  (which-key-idle-delay 1.0)
+  (which-key-compute-remaps t)
+  (which-key-popup-type 'minibuffer)
   :init
   (which-key-mode))
 
