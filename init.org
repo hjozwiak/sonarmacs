@@ -79,7 +79,7 @@ There are three package sources that we use by default:
 ** use-package Installation
 #+begin_src emacs-lisp
   (unless (package-installed-p 'use-package)
-    (package-install ''use-package))
+    (package-install 'use-package))
   (require 'use-package)
 #+end_src
 ** speechd-el

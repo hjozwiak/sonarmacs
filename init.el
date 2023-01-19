@@ -5,7 +5,7 @@
 (customize-set-variable 'package-archive-priorities '(("melpa" . 10) ("gnu" . 9) ("nongnu" . 8)))
 
 (unless (package-installed-p 'use-package)
-  (package-install ''use-package))
+  (package-install 'use-package))
 (require 'use-package)
 
 (use-package speechd-el
