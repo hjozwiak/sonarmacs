@@ -22,12 +22,8 @@ Here are some things to note:
 - interact with the source blocks by pressing C-', which puts you into a special edit mode
 - The sections of the document are folded, so you will need to press TAB on the section you want to see the children of.
 ** Getting In Touch
-If you want to get in touch with fellow users or submit patches, here are the mailing lists.
-| name               | purpose                                       | subscribe                                          | communicate                             |
-|--------------------+-----------------------------------------------+----------------------------------------------------+-----------------------------------------|
-| sonarmacs-announce | Announcement list (will probably not be used) | [[mailto:~hjozwiak/sonarmacs-announce+subscribe@lists.sr.ht][~hjozwiak/sonarmacs-announce+subscribe@lists.sr.ht]] | n/a                                     |
-| sonarmacs-discuss  | general user discussions                      | [[mailto:~hjozwiak/sonarmacs-discuss+subscribe@lists.sr.ht][~hjozwiak/sonarmacs-discuss+subscribe@lists.sr.ht]]  | [[mailto:~hjozwiak/sonarmacs-discuss@lists.sr.ht][~hjozwiak/sonarmacs-discuss@lists.sr.ht]] |
-| sonarmacs-devel    | submit your patches here                      | [[mailto:~hjozwiak/sonarmacs-devel+subscribe@lists.sr.ht][~hjozwiak/sonarmacs-devel+subscribe@lists.sr.ht]]    | [[mailto:~hjozwiak/sonarmacs-devel@lists.sr.ht][~hjozwiak/sonarmacs-devel@lists.sr.ht]]   |
+This repository is now hosted on Github, so you can submit pull requests and file issues there.
+
 * Early Initialization
 :properties:
 :header-args:emacs-lisp: :tangle ./early-init.el :lexical yes
