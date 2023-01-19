@@ -95,7 +95,7 @@ The configuration of speechd-el is quite immense, so this section is meant more 
 #+end_src
 *** Helper Functions
 **** Retrieve a Reading Function
-In order to make definers for setup, we need to first make functions that will return functions that are defined in speechd-speak. For example, the reading functions speechd-speak-read-paragraph, sentence, etc.
+In order to make definers for use-package, we need to first make functions that will return functions that are defined in speechd-speak. For example, the reading functions speechd-speak-read-paragraph, sentence, etc.
 #+begin_src emacs-lisp
   (defun retrieve-speechd-function (thing)
     "Retrieve the function that is defined by speechd-el.
@@ -195,7 +195,3 @@ I don't really care for tabs, so let's turn it off.
 By default, Eldoc is really spammy. Let's have it write to a buffer instead, and read from that buffer when things are changed.
 #+begin_src emacs-lisp
 #+end_src
-
-# Local Variables:
-# eval: (add-hook 'before-save-hook #'org-babel-tangle nil t)
-# End:
