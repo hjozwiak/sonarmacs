@@ -118,7 +118,7 @@ By default, Emacs will pollute your configuration directory with various auto-sa
     (custom-file (no-littering-expand-etc-file-name "custom.el")))
 #+end_src
 ** Which Key
-As you input keys into Emacs, which-key will interactively filter the currently available options and present the commands and their keybindings.
+As you input keys into Emacs, which-key will interactively filter the currently available options and present the commands and their keybindings. As it is right now, which-key will wait one second before printing its output to the minibuffer for speechd-el to read. If you should do something that prints out a large keymap, i.e. ctl-x, it will barf everything out in one go; I need to figure out a solution for this as yet.
 #+begin_src emacs-lisp
   (use-package which-key
     :ensure t
@@ -198,6 +198,7 @@ There are a few things that we need to set before Evil itself is loaded.
   (use-package evil
     :ensure t
     :custom
+    (evil-echo-state nil)
     (evil-want-integration t)
     (evil-want-c-i-jump nil)
     (evil-want-keybind nil)
@@ -217,7 +218,10 @@ There are a few things that we need to set before Evil itself is loaded.
      :config
      (speechd-speak--command-feedback (evil-next-line evil-previous-line evil-next-visual-line evil-previous-visual-line) after (speechd-speak-read-line (not speechd-speak-whole-line)))
      (speechd-speak--command-feedback (evil-forward-paragraph evil-backward-paragraph) after
-				      (speechd-speak-read-paragraph)))
+				      (speechd-speak-read-paragraph))
+     (speechd-speak--command-feedback (evil-forward-word-begin evil-backward-word-begin evil-backward-word-end evil-forward-word-end) after (speechd-speak-read-word))
+     (speechd-speak-command-feedback evil-backward-char after (speechd-speak-read-char (following-char)))
+     (speechd-speak-command-feedback evil-forward-char after (speechd-speak-read-char (preceding-char))))
 #+end_src
 
 

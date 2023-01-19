@@ -102,6 +102,7 @@ Usually it is the form of speechd-speak-read-<thing>"
 (use-package evil
   :ensure t
   :custom
+  (evil-echo-state nil)
   (evil-want-integration t)
   (evil-want-c-i-jump nil)
   (evil-want-keybind nil)
@@ -121,7 +122,10 @@ Usually it is the form of speechd-speak-read-<thing>"
    :config
    (speechd-speak--command-feedback (evil-next-line evil-previous-line evil-next-visual-line evil-previous-visual-line) after (speechd-speak-read-line (not speechd-speak-whole-line)))
    (speechd-speak--command-feedback (evil-forward-paragraph evil-backward-paragraph) after
-				    (speechd-speak-read-paragraph)))
+				    (speechd-speak-read-paragraph))
+   (speechd-speak--command-feedback (evil-forward-word-begin evil-backward-word-begin evil-backward-word-end evil-forward-word-end) after (speechd-speak-read-word))
+   (speechd-speak-command-feedback evil-backward-char after (speechd-speak-read-char (following-char)))
+   (speechd-speak-command-feedback evil-forward-char after (speechd-speak-read-char (preceding-char))))
 
 (setc user-full-name "Hunter Jozwiak"
       user-mail-address "hunter.t.joz@gmail.com"
