@@ -92,6 +92,35 @@ Usually it is the form of speechd-speak-read-<thing>"
 ;; Aliases
 (defalias 'setc #'general-setq "A convenience alias for setting customizable variables.")
 
+(use-package undo-tree
+  :init
+  (global-undo-tree-mode)
+  :ensure t)
+
+(use-package evil
+  :ensure t
+  :custom
+  (evil-want-integration t)
+  (evil-want-c-i-jump nil)
+  (evil-want-keybind nil)
+  (evil-undo-system 'undo-tree)
+  :preface
+  (defun sonarmacs--evil-state-change-notify ()
+    (when (and evil-next-state evil-previous-state (not (eq evil-previous-state evil-next-state)))
+      (speechd-say-text (format "Changing state from %s to %s." evil-previous-state evil-next-state) :priority 'important)))
+  :hook ((evil-insert-state-exit evil-normal-state-exit evil-motion-state-exit evil-operator-state-exit evil-replace-state-exit evil-visual-state-exit evil-emacs-state-exit) . sonarmacs--evil-state-change-notify)
+  :general
+  (:states '(normal visual insert operator replace motion)
+	   speechd-speak-prefix speechd-speak-mode-map)
+  (speechd-speak-mode-map
+   "e" 'evil-scroll-line-down)
+   :init
+   (evil-mode)
+   :config
+   (speechd-speak--command-feedback (evil-next-line evil-previous-line evil-next-visual-line evil-previous-visual-line) after (speechd-speak-read-line (not speechd-speak-whole-line)))
+   (speechd-speak--command-feedback (evil-forward-paragraph evil-backward-paragraph) after
+				    (speechd-speak-read-paragraph)))
+
 (setc user-full-name "Hunter Jozwiak"
       user-mail-address "hunter.t.joz@gmail.com"
       user-login-name "sektor")
