@@ -120,7 +120,7 @@ Usually it is the form of speechd-speak-read-<thing>"
    :init
    (evil-mode)
    :config
-   (speechd-speak--command-feedback (evil-next-line evil-previous-line evil-next-visual-line evil-previous-visual-line) after (speechd-speak-read-line (not speechd-speak-whole-line)))
+   (speechd-speak--command-feedback (evil-next-line evil-previous-line evil-next-visual-line evil-previous-visual-line evil-beginning-of-line) after (speechd-speak-read-line (not speechd-speak-whole-line)))
    (speechd-speak--command-feedback (evil-forward-paragraph evil-backward-paragraph) after
 				    (speechd-speak-read-paragraph))
    (speechd-speak--command-feedback (evil-forward-word-begin evil-backward-word-begin evil-backward-word-end evil-forward-word-end) after (speechd-speak-read-word))
