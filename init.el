@@ -127,10 +127,65 @@ Usually it is the form of speechd-speak-read-<thing>"
    (speechd-speak-command-feedback evil-backward-char after (speechd-speak-read-char (following-char)))
    (speechd-speak-command-feedback evil-forward-char after (speechd-speak-read-char (preceding-char))))
 
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
+
 (setc user-full-name "Hunter Jozwiak"
       user-mail-address "hunter.t.joz@gmail.com"
       user-login-name "sektor")
 
+(setc use-short-answers t)
+
 (indent-tabs-mode nil)
 
+(use-package eldoc
+  :init
+  ;; Bookkeeping
+  (defvar sonarmacs--last-spoken-eldoc-message nil "The last documentation that we spoke.")
+  (defun sonarmacs--speak-eldoc (docs interactive)
+    "Speak the eldoc documentation from the buffer.
 
+If the documentation strings are the same as before, i.e., the symbol has not changed, do not respeak them; the user can go back and view the buffer if they like."
+    (when (and eldoc--doc-buffer (buffer-live-p eldoc--doc-buffer))
+      (with-current-buffer eldoc--doc-buffer
+      (unless (equal sonarmacs--last-spoken-eldoc-message eldoc--doc-buffer-docs)
+	(speechd-say-text (buffer-string) :priority 'important)
+	(setq sonarmacs--last-spoken-eldoc-message docs)))))
+  :ghook
+  ('eldoc-display-functions (list #'sonarmacs--speak-eldoc #'eldoc-display-in-buffer))
+  :custom
+  (eldoc-echo-area-prefer-doc-buffer t)
+  :config
+  (remove-hook 'eldoc-display-functions #'eldoc-display-in-echo-area))
+
+(use-package magit
+  :ensure t
+  :custom
+  (magit-delete-by-moving-to-trash nil)
+  :general
+  (mapleader
+    "g" '(:ignore t :which-key "Git operations.")
+    "gg" '(magit-status :which-key "Magit status.")
+    "gs" '(magit-stage-file :which-key "Stage the working file."))
+  :config
+  (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules 'magit-insert-stashes 'append))
+
+(use-package forge
+  :after magit
+  :ensure t
+  :general
+  (mapleader
+    "gf" '(forge-dispatch :which-key "Forge dispatch map.")))
+
+(use-package git-timemachine
+  :ensure t
+  :general
+  (mapleader
+    "tg" '(git-timemachine-toggle :which-key "Toggle the time machine on or off.")))
+
+(use-package magit-gitflow
+  :ensure t
+  :hook (magit-mode . turn-on-magit-gitflow))
