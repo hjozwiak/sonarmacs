@@ -43,6 +43,7 @@ Usually it is the form of speechd-speak-read-<thing>"
   (which-key-idle-delay 1.0)
   (which-key-compute-remaps t)
   (which-key-popup-type 'minibuffer)
+  (which-key-show-transient-maps t)
   :init
   (which-key-mode))
 
@@ -133,33 +134,12 @@ Usually it is the form of speechd-speak-read-<thing>"
   :config
   (evil-collection-init))
 
-(setc user-full-name "Hunter Jozwiak"
-      user-mail-address "hunter.t.joz@gmail.com"
-      user-login-name "sektor")
-
-(setc use-short-answers t)
-
-(indent-tabs-mode nil)
-
-(use-package eldoc
-  :init
-  ;; Bookkeeping
-  (defvar sonarmacs--last-spoken-eldoc-message nil "The last documentation that we spoke.")
-  (defun sonarmacs--speak-eldoc (docs interactive)
-    "Speak the eldoc documentation from the buffer.
-
-If the documentation strings are the same as before, i.e., the symbol has not changed, do not respeak them; the user can go back and view the buffer if they like."
-    (when (and eldoc--doc-buffer (buffer-live-p eldoc--doc-buffer))
-      (with-current-buffer eldoc--doc-buffer
-      (unless (equal sonarmacs--last-spoken-eldoc-message eldoc--doc-buffer-docs)
-	(speechd-say-text (buffer-string) :priority 'important)
-	(setq sonarmacs--last-spoken-eldoc-message docs)))))
-  :ghook
-  ('eldoc-display-functions (list #'sonarmacs--speak-eldoc #'eldoc-display-in-buffer))
+(use-package transient
+  :ensure t
   :custom
-  (eldoc-echo-area-prefer-doc-buffer t)
-  :config
-  (remove-hook 'eldoc-display-functions #'eldoc-display-in-echo-area))
+  (transient-show-popup t)
+  (transient-enable-popup-navigation t)
+  (transient-force-single-column t))
 
 (use-package magit
   :ensure t
@@ -189,3 +169,31 @@ If the documentation strings are the same as before, i.e., the symbol has not ch
 (use-package magit-gitflow
   :ensure t
   :hook (magit-mode . turn-on-magit-gitflow))
+
+(setc user-full-name "Hunter Jozwiak"
+      user-mail-address "hunter.t.joz@gmail.com"
+      user-login-name "sektor")
+
+(setc use-short-answers t)
+
+(indent-tabs-mode nil)
+
+(use-package eldoc
+  :init
+  ;; Bookkeeping
+  (defvar sonarmacs--last-spoken-eldoc-message nil "The last documentation that we spoke.")
+  (defun sonarmacs--speak-eldoc (docs interactive)
+    "Speak the eldoc documentation from the buffer.
+
+If the documentation strings are the same as before, i.e., the symbol has not changed, do not respeak them; the user can go back and view the buffer if they like."
+    (when (and eldoc--doc-buffer (buffer-live-p eldoc--doc-buffer))
+      (with-current-buffer eldoc--doc-buffer
+      (unless (equal sonarmacs--last-spoken-eldoc-message eldoc--doc-buffer-docs)
+	(speechd-say-text (buffer-string) :priority 'important)
+	(setq sonarmacs--last-spoken-eldoc-message docs)))))
+  :ghook
+  ('eldoc-display-functions (list #'sonarmacs--speak-eldoc #'eldoc-display-in-buffer))
+  :custom
+  (eldoc-echo-area-prefer-doc-buffer t)
+  :config
+  (remove-hook 'eldoc-display-functions #'eldoc-display-in-echo-area))
