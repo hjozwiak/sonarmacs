@@ -248,8 +248,12 @@ Magit is the really handy git porcilin for Emacs, which I have used for years.
     (transient-force-single-column t)
     :config
     (speechd-speak--command-feedback (transient-forward-button transient-backward-button) after
-                                     (speechd-speak-read-line)
-                                     ))
+                                     (with-current-buffer (window-buffer transient--window)
+                                       ;; Get at the button to speak.
+                                       (when-let ((button (button-at (point)))
+                                                  (start (button-start button))
+                                                  (end (button-end button)))
+                                         (speechd-speak-read-region start end)))))
 #+end_src
 **** Core Magit
 #+begin_src emacs-lisp

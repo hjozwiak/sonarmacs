@@ -143,8 +143,12 @@ Usually it is the form of speechd-speak-read-<thing>"
   (transient-force-single-column t)
   :config
   (speechd-speak--command-feedback (transient-forward-button transient-backward-button) after
-                                   (speechd-speak-read-line)
-                                   ))
+                                   (with-current-buffer (window-buffer transient--window)
+                                     ;; Get at the button to speak.
+                                     (when-let ((button (button-at (point)))
+                                                (start (button-start button))
+                                                (end (button-end button)))
+                                       (speechd-speak-read-region start end)))))
 
 (use-package magit
   :ensure t
