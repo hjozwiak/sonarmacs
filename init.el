@@ -10,6 +10,7 @@
 
 (use-package speechd-el
   :ensure t
+  :demand t
   :custom
    (speechd-speak-whole-line t)
    (speechd-speak-echo nil)
@@ -17,7 +18,7 @@
    (speechd-voices '((nil
                            (rate . 100)
                            (output-module . "espeak-ng"))))
-:init
+:config
 (speechd-speak))
 
 (defun retrieve-speechd-function (thing)
@@ -115,7 +116,7 @@ Usually it is the form of speechd-speak-read-<thing>"
   :hook ((evil-insert-state-exit evil-normal-state-exit evil-motion-state-exit evil-operator-state-exit evil-replace-state-exit evil-visual-state-exit evil-emacs-state-exit) . sonarmacs--evil-state-change-notify)
   :general
   (:states '(normal visual insert operator replace motion)
-	   speechd-speak-prefix speechd-speak-mode-map)
+           speechd-speak-prefix speechd-speak-mode-map)
   (speechd-speak-mode-map
    "e" 'evil-scroll-line-down)
    :init
@@ -123,7 +124,7 @@ Usually it is the form of speechd-speak-read-<thing>"
    :config
    (speechd-speak--command-feedback (evil-next-line evil-previous-line evil-next-visual-line evil-previous-visual-line evil-beginning-of-line) after (speechd-speak-read-line (not speechd-speak-whole-line)))
    (speechd-speak--command-feedback (evil-forward-paragraph evil-backward-paragraph) after
-				    (speechd-speak-read-paragraph))
+                                    (speechd-speak-read-paragraph))
    (speechd-speak--command-feedback (evil-forward-word-begin evil-backward-word-begin evil-backward-word-end evil-forward-word-end) after (speechd-speak-read-word))
    (speechd-speak--command-feedback (evil-backward-char) after (speechd-speak-read-char (following-char)))
    (speechd-speak--command-feedback (evil-forward-char) after (speechd-speak-read-char (preceding-char))))
@@ -139,7 +140,11 @@ Usually it is the form of speechd-speak-read-<thing>"
   :custom
   (transient-show-popup t)
   (transient-enable-popup-navigation t)
-  (transient-force-single-column t))
+  (transient-force-single-column t)
+  :config
+  (speechd-speak--command-feedback (transient-forward-button transient-backward-button) after
+                                   (speechd-speak-read-line)
+                                   ))
 
 (use-package magit
   :ensure t
@@ -176,7 +181,7 @@ Usually it is the form of speechd-speak-read-<thing>"
 
 (setc use-short-answers t)
 
-(indent-tabs-mode nil)
+(customize-set-variable 'indent-tabs-mode nil)
 
 (use-package eldoc
   :init
@@ -189,8 +194,8 @@ If the documentation strings are the same as before, i.e., the symbol has not ch
     (when (and eldoc--doc-buffer (buffer-live-p eldoc--doc-buffer))
       (with-current-buffer eldoc--doc-buffer
       (unless (equal sonarmacs--last-spoken-eldoc-message eldoc--doc-buffer-docs)
-	(speechd-say-text (buffer-string) :priority 'important)
-	(setq sonarmacs--last-spoken-eldoc-message docs)))))
+        (speechd-say-text (buffer-string) :priority 'important)
+        (setq sonarmacs--last-spoken-eldoc-message docs)))))
   :ghook
   ('eldoc-display-functions (list #'sonarmacs--speak-eldoc #'eldoc-display-in-buffer))
   :custom
