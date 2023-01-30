@@ -124,8 +124,8 @@ Usually it is the form of speechd-speak-read-<thing>"
    (speechd-speak--command-feedback (evil-forward-paragraph evil-backward-paragraph) after
 				    (speechd-speak-read-paragraph))
    (speechd-speak--command-feedback (evil-forward-word-begin evil-backward-word-begin evil-backward-word-end evil-forward-word-end) after (speechd-speak-read-word))
-   (speechd-speak-command-feedback evil-backward-char after (speechd-speak-read-char (following-char)))
-   (speechd-speak-command-feedback evil-forward-char after (speechd-speak-read-char (preceding-char))))
+   (speechd-speak--command-feedback (evil-backward-char) after (speechd-speak-read-char (following-char)))
+   (speechd-speak--command-feedback (evil-forward-char) after (speechd-speak-read-char (preceding-char))))
 
 (use-package evil-collection
   :after evil

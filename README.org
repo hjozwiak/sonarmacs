@@ -220,8 +220,8 @@ There are a few things that we need to set before Evil itself is loaded.
      (speechd-speak--command-feedback (evil-forward-paragraph evil-backward-paragraph) after
 				      (speechd-speak-read-paragraph))
      (speechd-speak--command-feedback (evil-forward-word-begin evil-backward-word-begin evil-backward-word-end evil-forward-word-end) after (speechd-speak-read-word))
-     (speechd-speak-command-feedback evil-backward-char after (speechd-speak-read-char (following-char)))
-     (speechd-speak-command-feedback evil-forward-char after (speechd-speak-read-char (preceding-char))))
+     (speechd-speak--command-feedback (evil-backward-char) after (speechd-speak-read-char (following-char)))
+     (speechd-speak--command-feedback (evil-forward-char) after (speechd-speak-read-char (preceding-char))))
 #+end_src
 **** Evil Collection
 For the mass evilification of modes.
