@@ -232,6 +232,11 @@ Usually it is the form of speechd-speak-read-<thing>"
    "C-h" 'vertico-directory-up
    "C-l" 'vertico-directory-down))
 
+(use-package marginalia
+  :ensure t
+  :init
+  (marginalia-mode t))
+
 (setc user-full-name "Hunter Jozwiak"
       user-mail-address "hunter.t.joz@gmail.com"
       user-login-name "sektor")

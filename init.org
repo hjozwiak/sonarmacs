@@ -353,6 +353,14 @@ For going back through previous revisions of a file.
      "C-h" 'vertico-directory-up
      "C-l" 'vertico-directory-down))
 #+end_src
+*** Marginalia
+For useful annotations, not sure exactly how useful this will be.
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :ensure t
+    :init
+    (marginalia-mode t))
+#+end_src
 ** Emacs Internals
 *** User Information
 Tell Emacs who you are, as well as some other things.
