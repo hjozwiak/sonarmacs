@@ -64,6 +64,11 @@ Usually it is the form of speechd-speak-read-<thing>"
    "bn" '(next-buffer :which-key "Go to the next buffer.")
    "bp" '(previous-buffer :which-key "Go to the previous buffer.")
    "bb" '(switch-to-buffer :which-key "Switch to a buffer.")
+   "bj" '(:ignore t :which-key "Jumping to specific buffers.")
+   "bjd" '(dired-jump :which-key "Go to a dired window.")
+   "bjm" '((lambda () (interactive) (switch-to-buffer (messages-buffer))) :which-key "Jump to messages buffer.")
+   "bjw" '((lambda () (interactive) (switch-to-buffer "*Warnings*")) :which-key "Go to the warnings buffer.")
+   "bjs" '((lambda () (interactive) (switch-to-buffer "*scratch*")) :which-key "Switch to the scratch buffer.")
    "bi" '(ibuffer :which-key "Interactive buffer management through the Ibuffer interface.")
    "br" '(revert-buffer :which-key "Revert the buffer to how it is on disk.")
    ;; Customization
@@ -76,6 +81,7 @@ Usually it is the form of speechd-speak-read-<thing>"
    "f" '(:ignore t :which-key "File operations.")
    "fs" '(save-buffer :which-key "Save your currently opened file.")
    "ff" '(find-file :which-key "Find a file.")
+   "fd" '(dired :which-key "Open a dired buffer.")
    ;; Frame operations
    "F" '(:ignore t "Frames.")
    "Fd" '(delete-frame :which-key "Delete this frame.")

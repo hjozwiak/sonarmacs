@@ -134,53 +134,59 @@ As you input keys into Emacs, which-key will interactively filter the currently 
 ** General.el
 General is a nifty utility for easily defining keybindings, as well as having some useful utilities for running code after initialization of Emacs, after the first GUI and/or TTY frame is created, and setting custom user options.
 #+begin_src emacs-lisp
-    (use-package general
-      :ensure t
-      :demand t
-      :config
-      (general-auto-unbind-keys)
-      (general-evil-setup t)
-      ;; Create the leader definer
-      (general-create-definer mapleader
-        :prefix "SPC"
-        :global-prefix "C-SPC"
-        :states '(normal visual insert emacs))
-      (mapleader
-       "b" '(:ignore t :which-key "Buffer operations")
-       "bn" '(next-buffer :which-key "Go to the next buffer.")
-       "bp" '(previous-buffer :which-key "Go to the previous buffer.")
-       "bb" '(switch-to-buffer :which-key "Switch to a buffer.")
-       "bi" '(ibuffer :which-key "Interactive buffer management through the Ibuffer interface.")
-       "br" '(revert-buffer :which-key "Revert the buffer to how it is on disk.")
-       ;; Customization
-       "c" '(:ignore t :which-key "Customization interface.")
-       "cc" '(customize :which-key "Open the customization index.")
-       "cf" '(customize-face :which-key "Customize a face.")
-       "cg" '(customize-group :which-key "Customize a specific group.")
-       "cv" '(customize-variable :which-key "Customize a variable in the custom interface.")
-       "cV" '(customize-set-variable :which-key "Expert level variable setting, sans interface.")
-       "f" '(:ignore t :which-key "File operations.")
-       "fs" '(save-buffer :which-key "Save your currently opened file.")
-       "ff" '(find-file :which-key "Find a file.")
-       ;; Frame operations
-       "F" '(:ignore t "Frames.")
-       "Fd" '(delete-frame :which-key "Delete this frame.")
-       "Fo" '(other-frame :which-key "Go to another frame.")
-       "h" '(:ignore t :which-key "Help")
-       "hd" '(:ignore t :which-key "Describe parts of Emacs.")
-       "hdb" '(describe-bindings :which-key "Describe the keybindings that are in effect right now.")
-       "hdB" '(general-describe-keybindings :which-key "Get a list of the key bindings that are in effect via General.")
-       "hdf" '(describe-function :which-key "Describe a function.")
-       "hdF" '(describe-face :which-key "Describe a face.")
-       "hdk" '(describe-key :which-key "Describe what a key is bound to.")
-       "hdp" '(describe-package :which-key "Describe a package.")
-       ;; Info manuals
-       "hi" '(:ignore t :which-key "Info")
-       "hia" '(info-apropos :which-key "Search the info database.")
-       "hii" '(info-index :which-key "Open the info index.")
-       "him" '(info-display-manual :which-key "Open a specific info manual.")))
-    ;; Aliases
-    (defalias 'setc #'general-setq "A convenience alias for setting customizable variables.")
+  (use-package general
+    :ensure t
+    :demand t
+    :config
+    (general-auto-unbind-keys)
+    (general-evil-setup t)
+    ;; Create the leader definer
+    (general-create-definer mapleader
+      :prefix "SPC"
+      :global-prefix "C-SPC"
+      :states '(normal visual insert emacs))
+    (mapleader
+     "b" '(:ignore t :which-key "Buffer operations")
+     "bn" '(next-buffer :which-key "Go to the next buffer.")
+     "bp" '(previous-buffer :which-key "Go to the previous buffer.")
+     "bb" '(switch-to-buffer :which-key "Switch to a buffer.")
+     "bj" '(:ignore t :which-key "Jumping to specific buffers.")
+     "bjd" '(dired-jump :which-key "Go to a dired window.")
+     "bjm" '((lambda () (interactive) (switch-to-buffer (messages-buffer))) :which-key "Jump to messages buffer.")
+     "bjw" '((lambda () (interactive) (switch-to-buffer "*Warnings*")) :which-key "Go to the warnings buffer.")
+     "bjs" '((lambda () (interactive) (switch-to-buffer "*scratch*")) :which-key "Switch to the scratch buffer.")
+     "bi" '(ibuffer :which-key "Interactive buffer management through the Ibuffer interface.")
+     "br" '(revert-buffer :which-key "Revert the buffer to how it is on disk.")
+     ;; Customization
+     "c" '(:ignore t :which-key "Customization interface.")
+     "cc" '(customize :which-key "Open the customization index.")
+     "cf" '(customize-face :which-key "Customize a face.")
+     "cg" '(customize-group :which-key "Customize a specific group.")
+     "cv" '(customize-variable :which-key "Customize a variable in the custom interface.")
+     "cV" '(customize-set-variable :which-key "Expert level variable setting, sans interface.")
+     "f" '(:ignore t :which-key "File operations.")
+     "fs" '(save-buffer :which-key "Save your currently opened file.")
+     "ff" '(find-file :which-key "Find a file.")
+     "fd" '(dired :which-key "Open a dired buffer.")
+     ;; Frame operations
+     "F" '(:ignore t "Frames.")
+     "Fd" '(delete-frame :which-key "Delete this frame.")
+     "Fo" '(other-frame :which-key "Go to another frame.")
+     "h" '(:ignore t :which-key "Help")
+     "hd" '(:ignore t :which-key "Describe parts of Emacs.")
+     "hdb" '(describe-bindings :which-key "Describe the keybindings that are in effect right now.")
+     "hdB" '(general-describe-keybindings :which-key "Get a list of the key bindings that are in effect via General.")
+     "hdf" '(describe-function :which-key "Describe a function.")
+     "hdF" '(describe-face :which-key "Describe a face.")
+     "hdk" '(describe-key :which-key "Describe what a key is bound to.")
+     "hdp" '(describe-package :which-key "Describe a package.")
+     ;; Info manuals
+     "hi" '(:ignore t :which-key "Info")
+     "hia" '(info-apropos :which-key "Search the info database.")
+     "hii" '(info-index :which-key "Open the info index.")
+     "him" '(info-display-manual :which-key "Open a specific info manual.")))
+  ;; Aliases
+  (defalias 'setc #'general-setq "A convenience alias for setting customizable variables.")
 #+end_src
 ** Evil Mode
 Evil is a system for providing vim-like keybindings in Emacs.
