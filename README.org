@@ -217,6 +217,8 @@ There are a few things that we need to set before Evil itself is loaded.
         (speechd-say-text (format "Changing state from %s to %s." evil-previous-state evil-next-state) :priority 'important)))
     :hook ((evil-insert-state-exit evil-normal-state-exit evil-motion-state-exit evil-operator-state-exit evil-replace-state-exit evil-visual-state-exit evil-emacs-state-exit) . sonarmacs--evil-state-change-notify)
     :general
+    (mapleader
+      "bd" '(evil-delete-buffer :which-key "Kill the current buffer."))
     (:states '(normal visual insert operator replace motion)
              speechd-speak-prefix speechd-speak-mode-map)
     (speechd-speak-mode-map
@@ -299,6 +301,57 @@ For going back through previous revisions of a file.
   (use-package magit-gitflow
     :ensure t
     :hook (magit-mode . turn-on-magit-gitflow))
+#+end_src
+** Completion
+*** Vertico
+#+begin_src emacs-lisp
+  (use-package vertico
+    :ensure t
+    :custom
+    (vertico-count 20)
+    (vertico-cycle t)
+    :general
+    (vertico-map
+     "C-j" 'vertico-next
+     "C-K" 'vertico-previous)
+    :preface
+    (defvar-local spoken-index -1 "Indes of the last spoken candidate")
+    (defvar-local last-spoken-candidate nil "Last spoken candidate.")
+    :init
+    (vertico-mode t)
+    :config
+    (speechd-speak--command-feedback-region (vertico-insert))
+  (speechd-speak--defadvice vertico--exhibit after
+    (let ((new-cand
+           (substring (vertico--candidate)
+                      (if (>= vertico--index 0)
+                              (length vertico--base)
+                        0)))
+          (to-speak nil))
+      (unless (equal last-spoken-candidate new-cand)
+        (push new-cand to-speak)
+        (when (or (equal vertico--index spoken-index)
+                  (and (not (equal vertico--index -1))
+                       (equal spoken-index -1)))
+          (push "candidate" to-speak)))
+      (when (and (not vertico--allow-prompt)
+                 (equal last-spoken-candidate nil))
+        (push "first candidate" to-speak))
+      (when to-speak
+        (speechd-say-text (mapconcat 'identity to-speak " ")))
+      (setq-local
+       last-spoken-candidate new-cand
+      spoken-index  vertico--index))))
+#+end_src
+**** Extensions
+***** vertico-directory
+#+begin_src emacs-lisp
+  (use-package vertico-directory
+    :after vertico
+    :general
+    (vertico-map
+     "C-h" 'vertico-directory-up
+     "C-l" 'vertico-directory-down))
 #+end_src
 ** Emacs Internals
 *** User Information
