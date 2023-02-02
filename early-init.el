@@ -5,3 +5,6 @@ menu-bar-mode nil)
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
+
+(customize-set-variable 'package-quickstart-file (expand-file-name "var/package-quickstart.el" user-emacs-directory))
+(customize-set-variable 'package-quickstart t)

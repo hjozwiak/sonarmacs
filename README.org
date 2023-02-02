@@ -42,7 +42,11 @@ For our purposes, we don't really need to have the toolbars or menu bars active 
   (push '(vertical-scroll-bars) default-frame-alist)
 #+end_src
 
-
+** Quickstart the Package System
+#+begin_src emacs-lisp
+  (customize-set-variable 'package-quickstart-file (expand-file-name "var/package-quickstart.el" user-emacs-directory))
+  (customize-set-variable 'package-quickstart t)
+#+end_src
 * Initialization File
 :properties:
 :header-args:emacs-lisp: :tangle ./init.el :lexical yes
