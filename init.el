@@ -243,6 +243,65 @@ Usually it is the form of speechd-speak-read-<thing>"
   :init
   (marginalia-mode t))
 
+(use-package consult
+  :ensure t)
+
+(use-package embark
+  :ensure t
+  :general
+  ([remap describe-bindings] 'embark-bindings
+   "C-." 'embark-act)
+  :custom
+  (prefix-help-command #'embark-prefix-help-command))
+
+(use-package embark-consult
+  :ensure t
+  :after embark consult
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
+
+(use-package corfu
+  :ensure t
+  :custom
+  (corfu-auto t)
+  (corfu-auto-delay 0.0)
+  (corfu-cycle t)
+  (corfu-echo-documentation 1)
+  :preface
+  (defvar-local corfu--last-spoken nil "The last spoken candidate.")
+  (defvar-local corfu--last-spoken-index nil "Index into the last spoken candidate.")
+  :init
+  (global-corfu-mode t)
+  :config
+  (eldoc-add-command #'corfu-insert)
+  (speechd-speak--defadvice corfu--exhibit after
+  (let ((new-cand
+         (substring (nth corfu--index corfu--candidates)
+                    (if (>= corfu--index 0)
+                            (length corfu--base)
+                      0)))
+        (to-speak nil))
+    (unless (equal corfu--last-spoken new-cand)
+      (push new-cand to-speak)
+      (when (or (equal corfu--index corfu--last-spoken-index)
+                (and (not (equal corfu--index -1))
+                     (equal corfu--last-spoken-index -1)))
+        (push "candidate" to-speak)))
+    (when (equal corfu--last-spoken nil)
+      (push "first candidate" to-speak))
+    (when to-speak
+      (speechd-say-text (mapconcat 'identity to-speak " ")))
+    (setq-local
+     corfu--last-spoken new-cand
+     corfu--last-spoken-index corfu--index))))
+
+(use-package cape
+  :ensure t
+  :config
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
+
 (setc user-full-name "Hunter Jozwiak"
       user-mail-address "hunter.t.joz@gmail.com"
       user-login-name "sektor")
