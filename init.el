@@ -302,12 +302,6 @@ Usually it is the form of speechd-speak-read-<thing>"
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 
-(setc user-full-name "Hunter Jozwiak"
-      user-mail-address "hunter.t.joz@gmail.com"
-      user-login-name "sektor")
-
-(setc use-short-answers t)
-
 (customize-set-variable 'indent-tabs-mode nil)
 
 (use-package eldoc
@@ -329,3 +323,14 @@ If the documentation strings are the same as before, i.e., the symbol has not ch
   (eldoc-echo-area-prefer-doc-buffer t)
   :config
   (remove-hook 'eldoc-display-functions #'eldoc-display-in-echo-area))
+
+(use-package eglot
+  :ensure t
+  :custom
+  (eglot-autoshutdown t))
+
+(setc user-full-name "Hunter Jozwiak"
+      user-mail-address "hunter.t.joz@gmail.com"
+      user-login-name "sektor")
+
+(setc use-short-answers t)

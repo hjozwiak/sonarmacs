@@ -438,26 +438,13 @@ For useful annotations, not sure exactly how useful this will be.
     (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
     (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 #+end_src
-** Emacs Internals
-*** User Information
-Tell Emacs who you are, as well as some other things.
-#+begin_src emacs-lisp
-  (setc user-full-name "Hunter Jozwiak"
-        user-mail-address "hunter.t.joz@gmail.com"
-        user-login-name "sektor")
-#+end_src
-*** Short Ansers
-When Emacs pops up a dialog for serious actions, such as deleting a file, it will expect an answer that is either yes or no, instead of the y or n prompt. The use-short-answers allows those prompts to be answered with either y or n.
-#+begin_src emacs-lisp
-  (setc use-short-answers t)
-#+end_src
-*** Basic Programming Things
-**** No Indent of Tabs
+** Basic Programming Things
+*** No Indent of Tabs
 I don't really care for tabs, so let's turn it off.
 #+begin_src emacs-lisp
   (customize-set-variable 'indent-tabs-mode nil)
 #+end_src
-**** Eldoc Tweaks
+*** Eldoc Tweaks
 By default, Eldoc is really spammy. Let's have it write to a buffer instead, and read from that buffer when things are changed.
 #+begin_src emacs-lisp
   (use-package eldoc
@@ -481,3 +468,26 @@ By default, Eldoc is really spammy. Let's have it write to a buffer instead, and
     (remove-hook 'eldoc-display-functions #'eldoc-display-in-echo-area))
 #+end_src
 
+*** Eglot
+This will be built into Emacs as of version 29, but we can take advantage of it for now by ensuring it is fetched from the package interface.
+
+In short, eglot is a bridge from Emacs to many LSP servers (rust-analyzer, Solargraph, etc). It aims to be lightweight and make use of Emacs internals (eldoc, flymake, xref, and friends).
+#+begin_src emacs-lisp
+  (use-package eglot
+    :ensure t
+    :custom
+    (eglot-autoshutdown t))
+#+end_src
+** Emacs Internals
+*** User Information
+Tell Emacs who you are, as well as some other things.
+#+begin_src emacs-lisp
+  (setc user-full-name "Hunter Jozwiak"
+        user-mail-address "hunter.t.joz@gmail.com"
+        user-login-name "sektor")
+#+end_src
+*** Short Ansers
+When Emacs pops up a dialog for serious actions, such as deleting a file, it will expect an answer that is either yes or no, instead of the y or n prompt. The use-short-answers allows those prompts to be answered with either y or n.
+#+begin_src emacs-lisp
+  (setc use-short-answers t)
+#+end_src
