@@ -187,6 +187,12 @@ Usually it is the form of speechd-speak-read-<thing>"
   :ensure t
   :hook (magit-mode . turn-on-magit-gitflow))
 
+(use-package orderless
+  :ensure t
+  :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles . (partial-completion))))))
+
 (use-package vertico
   :ensure t
   :custom

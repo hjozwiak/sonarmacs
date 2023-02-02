@@ -307,6 +307,14 @@ For going back through previous revisions of a file.
     :hook (magit-mode . turn-on-magit-gitflow))
 #+end_src
 ** Completion
+*** The Orderless Framework
+#+begin_src emacs-lisp
+  (use-package orderless
+    :ensure t
+    :custom
+      (completion-styles '(orderless basic))
+      (completion-category-overrides '((file (styles . (partial-completion))))))
+#+end_src
 *** Vertico
 #+begin_src emacs-lisp
   (use-package vertico
