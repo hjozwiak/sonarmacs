@@ -56,6 +56,7 @@ Usually it is the form of speechd-speak-read-<thing>"
   (general-evil-setup t)
   ;; Create the leader definer
   (general-create-definer mapleader
+    :keymaps 'override
     :prefix "SPC"
     :global-prefix "C-SPC"
     :states '(normal visual insert emacs))
@@ -98,7 +99,12 @@ Usually it is the form of speechd-speak-read-<thing>"
    "hi" '(:ignore t :which-key "Info")
    "hia" '(info-apropos :which-key "Search the info database.")
    "hii" '(info-index :which-key "Open the info index.")
-   "him" '(info-display-manual :which-key "Open a specific info manual.")))
+   "him" '(info-display-manual :which-key "Open a specific info manual."))
+  (general-create-definer maplocal
+    :keymaps 'override
+    :prefix ","
+    :global-prefix "SPC m"
+    :states '(normal visual)))
 ;; Aliases
 (defalias 'setc #'general-setq "A convenience alias for setting customizable variables.")
 
