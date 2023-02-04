@@ -6,11 +6,13 @@
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
+(customize-set-variable 'use-package-compute-statistics t)
+(customize-set-variable 'use-package-always-demand t)
 (require 'use-package)
 
 (use-package speechd-el
+:commands speechd-speak
   :ensure t
-  :demand t
   :custom
    (speechd-speak-whole-line t)
    (speechd-speak-echo nil)
@@ -32,7 +34,6 @@ Usually it is the form of speechd-speak-read-<thing>"
 
 (use-package no-littering
   :ensure t
-  :demand t
   :hook (after-init . (lambda () (load custom-file)))
   :custom
   (auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
@@ -45,12 +46,10 @@ Usually it is the form of speechd-speak-read-<thing>"
   (which-key-compute-remaps t)
   (which-key-popup-type 'minibuffer)
   (which-key-show-transient-maps t)
-  :init
-  (which-key-mode))
+  (which-key-mode t))
 
 (use-package general
   :ensure t
-  :demand t
   :config
   (general-auto-unbind-keys)
   (general-evil-setup t)
@@ -109,8 +108,8 @@ Usually it is the form of speechd-speak-read-<thing>"
 (defalias 'setc #'general-setq "A convenience alias for setting customizable variables.")
 
 (use-package undo-tree
-  :init
-  (global-undo-tree-mode)
+  :custom
+  (global-undo-tree-mode t)
   :ensure t)
 
 (use-package evil
@@ -133,9 +132,8 @@ Usually it is the form of speechd-speak-read-<thing>"
            speechd-speak-prefix speechd-speak-mode-map)
   (speechd-speak-mode-map
    "e" 'evil-scroll-line-down)
-   :init
-   (evil-mode)
-   :config
+  :config
+  (evil-mode t)
    (speechd-speak--command-feedback (evil-next-line evil-previous-line evil-next-visual-line evil-previous-visual-line evil-beginning-of-line) after (speechd-speak-read-line (not speechd-speak-whole-line)))
    (speechd-speak--command-feedback (evil-forward-paragraph evil-backward-paragraph) after
                                     (speechd-speak-read-paragraph))
@@ -165,16 +163,15 @@ Usually it is the form of speechd-speak-read-<thing>"
                                        (speechd-speak-read-region start end)))))
 
 (use-package magit
-  :ensure t
   :custom
   (magit-delete-by-moving-to-trash nil)
   :general
   (mapleader
-    "g" '(:ignore t :which-key "Git operations.")
-    "gg" '(magit-status :which-key "Magit status.")
-    "gs" '(magit-stage-file :which-key "Stage the working file."))
+  "g" '(:ignore t :which-key "Git operations.")
+  "gg" '(magit-status :which-key "Status of the project.")
+  "gs" '(magit-stage-file :which-key "Stage a file."))
   :config
-  (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules 'magit-insert-stashes 'append))
+  (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules 'magit-insert-stashes))
 
 (use-package forge
   :after magit
@@ -204,6 +201,7 @@ Usually it is the form of speechd-speak-read-<thing>"
   :custom
   (vertico-count 20)
   (vertico-cycle t)
+  (vertico-mode t)
   :general
   (vertico-map
    "C-j" 'vertico-next
@@ -211,8 +209,6 @@ Usually it is the form of speechd-speak-read-<thing>"
   :preface
   (defvar-local spoken-index -1 "Indes of the last spoken candidate")
   (defvar-local last-spoken-candidate nil "Last spoken candidate.")
-  :init
-  (vertico-mode t)
   :config
   (speechd-speak--command-feedback-region (vertico-insert))
 (speechd-speak--defadvice vertico--exhibit after
@@ -246,7 +242,7 @@ Usually it is the form of speechd-speak-read-<thing>"
 
 (use-package marginalia
   :ensure t
-  :init
+  :custom
   (marginalia-mode t))
 
 (use-package consult
@@ -272,11 +268,10 @@ Usually it is the form of speechd-speak-read-<thing>"
   (corfu-auto-delay 0.0)
   (corfu-cycle t)
   (corfu-echo-documentation 1)
+  (global-corfu-mode t)
   :preface
   (defvar-local corfu--last-spoken nil "The last spoken candidate.")
   (defvar-local corfu--last-spoken-index nil "Index into the last spoken candidate.")
-  :init
-  (global-corfu-mode t)
   :config
   (eldoc-add-command #'corfu-insert)
   (speechd-speak--defadvice corfu--exhibit after
@@ -333,10 +328,31 @@ If the documentation strings are the same as before, i.e., the symbol has not ch
 (use-package eglot
   :ensure t
   :custom
-  (eglot-autoshutdown t))
+  (eglot-autoshutdown t)
+  :general
+  (maplocal
+    :states 'normal
+    :keymaps 'eglot-mode-map
+    "l" '(:ignore t :which-key "LSP.")
+    "la" '(:ignore t :which-key "LSP actions.")
+    "laa" '(eglot-code-actions :which-key "Code actions.")
+    "lae" '(eglot-code-action-extract)
+    "laf" '(eglot-format :which-key "Format the highlighted region.")
+    "laF" '(eglot-format-buffer :which-key "Format the current buffer.")
+    "lai" '(eglot-code-action-inline)
+    "lao" '(eglot-code-action-organize-imports :which-key "Organize your imports.")
+    "laq" '(eglot-code-action-quickfix)
+    "lar" '(eglot-rename :which-key "Rename the symbol under point.")
+    "laR" '(eglot-code-action-rewrite)
+    "lr" '(eglot-reconnect :which-key "Reconnect to the LSP server.")))
 
 (setc user-full-name "Hunter Jozwiak"
       user-mail-address "hunter.t.joz@gmail.com"
       user-login-name "sektor")
 
 (setc use-short-answers t)
+
+(use-package autorevert
+  :custom
+  (auto-revert-interval 0.1)
+  (global-auto-revert-mode t))
