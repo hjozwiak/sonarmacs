@@ -197,35 +197,23 @@ Usually it is the form of speechd-speak-read-<thing>"
 
 (setopt use-short-answers t)
 
-(use-package autorevert
-  :custom
-  (auto-revert-interval 0.1)
-  (global-auto-revert-mode t))
+(setopt auto-revert-interval 0.1
+        global-auto-revert-mode t)
 
-(use-package savehist
-  :custom(savehist-mode t))
+(setopt savehist-mode t)
 
-(use-package recentf
-  :custom(recentf-mode t))
+(setopt recentf-mode t)
 
-(use-package windmove
-  :general
-  (mapleader
-    "w" '(:ignore t :which-key "Window operations.")
-    "wh" 'windmove-left
-    "wl" 'windmove-right
-    "wk" 'windmove-up
-    "wj" 'windmove-down))
-
-(use-package winner
-  :custom
-  (winner-mode t)
-  :general
-  (mapleader
-    "wr" '(winner-redo :Which-key "Redo a window configuration.")
-    "wu" '(winner-redo :which-key "Redo a window configuration.")))
+(setopt winner-mode t)
 (mapleader
-  "wo" '(other-window :which-key "Go to the other window."))
+  "w" '(:ignore t :which-key "Window operations.")
+  "wl" 'windmove-right
+  "wh" 'windmove-left
+  "wk" 'windmove-up
+  "wj" 'windmove-down
+  "wr" 'winner-redo
+  "wu" 'winner-undo
+  "wo" 'other-window)
 
 (use-package orderless
   :ensure t
