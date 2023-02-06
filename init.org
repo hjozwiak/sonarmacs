@@ -86,6 +86,16 @@ There are three package sources that we use by default:
           use-package-always-demand t)
   (require 'use-package)
 #+end_src
+** No Littering
+By default, Emacs will pollute your configuration directory with various auto-save, cache and configuration files. The aim of the no littering package is to keep the configuration directory relatively clean, by putting persistant information into the var subdirectory and configuration files in etc.
+#+begin_src emacs-lisp
+  (use-package no-littering
+    :ensure t
+    :hook (after-init . (lambda () (load custom-file)))
+    :custom
+    (auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+    (custom-file (no-littering-expand-etc-file-name "custom.el")))
+#+end_src
 ** speechd-el
 The configuration of speechd-el is quite immense, so this section is meant more as a guide as to how to do it rather than something that is set in stone; feel free to tweak things to your liking.
 #+begin_src emacs-lisp
@@ -100,16 +110,6 @@ The configuration of speechd-el is quite immense, so this section is meant more 
                              (output-module . "espeak-ng"))))
   :config
   (speechd-speak))
-#+end_src
-** No Littering
-By default, Emacs will pollute your configuration directory with various auto-save, cache and configuration files. The aim of the no littering package is to keep the configuration directory relatively clean, by putting persistant information into the var subdirectory and configuration files in etc.
-#+begin_src emacs-lisp
-  (use-package no-littering
-    :ensure t
-    :hook (after-init . (lambda () (load custom-file)))
-    :custom
-    (auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
-    (custom-file (no-littering-expand-etc-file-name "custom.el")))
 #+end_src
 ** Which Key
 As you input keys into Emacs, which-key will interactively filter the currently available options and present the commands and their keybindings. As it is right now, which-key will wait one second before printing its output to the minibuffer for speechd-el to read. If you should do something that prints out a large keymap, i.e. ctl-x, it will barf everything out in one go; I need to figure out a solution for this as yet.

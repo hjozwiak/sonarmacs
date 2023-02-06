@@ -11,6 +11,13 @@
         use-package-always-demand t)
 (require 'use-package)
 
+(use-package no-littering
+  :ensure t
+  :hook (after-init . (lambda () (load custom-file)))
+  :custom
+  (auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+  (custom-file (no-littering-expand-etc-file-name "custom.el")))
+
 (use-package speechd-el
   :ensure t
   :custom
@@ -22,13 +29,6 @@
                            (output-module . "espeak-ng"))))
 :config
 (speechd-speak))
-
-(use-package no-littering
-  :ensure t
-  :hook (after-init . (lambda () (load custom-file)))
-  :custom
-  (auto-save-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
-  (custom-file (no-littering-expand-etc-file-name "custom.el")))
 
 (use-package which-key
   :ensure t
