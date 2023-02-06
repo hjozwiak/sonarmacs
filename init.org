@@ -80,8 +80,47 @@ There are three package sources that we use by default:
 #+begin_src emacs-lisp
   (customize-set-variable 'package-archive-priorities '(("melpa" . 10) ("gnu" . 9) ("nongnu" . 8)))
 #+end_src
-** use-package Installation
+** Define a Setup Macro Should It Be Needed
+In Emacs 29, there exists a setopt macro that works like setq, but is meant for user-customizeable variables.
+
+It replaces general-setq, which aims to be a similar interface.
 #+begin_src emacs-lisp
+  (unless (fboundp 'setopt)
+    (defmacro setopt (&rest pairs)
+    "Set VARIABLE/VALUE pairs, and return the final VALUE.
+  This is like `setq', but is meant for user options instead of
+  plain variables.  This means that `setopt' will execute any
+  `custom-set' form associated with VARIABLE.
+
+  \(fn [VARIABLE VALUE]...)"
+    (declare (debug setq))
+    (unless (zerop (mod (length pairs) 2))
+      (error "PAIRS must have an even number of variable/value members"))
+    (let ((expr nil))
+      (while pairs
+        (unless (symbolp (car pairs))
+          (error "Attempting to set a non-symbol: %s" (car pairs)))
+        (push `(setopt--set ',(car pairs) ,(cadr pairs))
+              expr)
+        (setq pairs (cddr pairs)))
+      (macroexp-progn (nreverse expr))))
+  (defun setopt--set (variable value)
+    (custom-load-symbol variable)
+    ;; Check that the type is correct.
+    (when-let ((type (get variable 'custom-type)))
+      (unless (widget-apply (widget-convert type) :match value)
+        (warn "Value `%S' does not match type %s" value type)))
+    (put variable 'custom-check-value (list value))
+    (funcall (or (get variable 'custom-set) #'set-default) variable value)))
+
+#+end_src 
+** use-package Installation
+use-package is a configuration macro that allows for easy installation, customization, and further configuration of packages.
+
+As of Emacs 29, this will be built into Emacs core, so installing it will not be necessary.
+#+begin_src emacs-lisp
+  (unless (and (version< emacs-version "29.0") (package-installed-p 'use-package))
+    (package-install 'use-package))
   (setopt use-package-compute-statistics t
           use-package-always-demand t)
   (require 'use-package)
@@ -501,6 +540,8 @@ This will be built into Emacs as of version 29, but we can take advantage of it 
 
 In short, eglot is a bridge from Emacs to many LSP servers (rust-analyzer, Solargraph, etc). It aims to be lightweight and make use of Emacs internals (eldoc, flymake, xref, and friends).
 #+begin_src emacs-lisp
+  (unless (and (version< emacs-version "29.0") (package-installed-p 'eglot))
+    (package-install 'eglot))
   (use-package eglot
     :custom
     (eglot-autoshutdown t)
