@@ -1,17 +1,17 @@
 ;; -*- lexical-binding: t; -*-
+(setopt package-quickstart-file (expand-file-name "var/package-quickstart.el" user-emacs-directory)
+        package-quickstart t)
+
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
 (customize-set-variable 'package-archive-priorities '(("melpa" . 10) ("gnu" . 9) ("nongnu" . 8)))
 
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-(customize-set-variable 'use-package-compute-statistics t)
-(customize-set-variable 'use-package-always-demand t)
+(setopt use-package-compute-statistics t
+        use-package-always-demand t)
 (require 'use-package)
 
 (use-package speechd-el
-:commands speechd-speak
   :ensure t
   :custom
    (speechd-speak-whole-line t)
@@ -82,6 +82,7 @@ Usually it is the form of speechd-speak-read-<thing>"
    "fs" '(save-buffer :which-key "Save your currently opened file.")
    "ff" '(find-file :which-key "Find a file.")
    "fd" '(dired :which-key "Open a dired buffer.")
+   "fr" '(recentf-open-files :which-key "Open a recent file.")
    ;; Frame operations
    "F" '(:ignore t "Frames.")
    "Fd" '(delete-frame :which-key "Delete this frame.")
@@ -189,6 +190,42 @@ Usually it is the form of speechd-speak-read-<thing>"
 (use-package magit-gitflow
   :ensure t
   :hook (magit-mode . turn-on-magit-gitflow))
+
+(setopt user-full-name "Hunter Jozwiak"
+      user-mail-address "hunter.t.joz@gmail.com"
+      user-login-name "sektor")
+
+(setopt use-short-answers t)
+
+(use-package autorevert
+  :custom
+  (auto-revert-interval 0.1)
+  (global-auto-revert-mode t))
+
+(use-package savehist
+  :custom(savehist-mode t))
+
+(use-package recentf
+  :custom(recentf-mode t))
+
+(use-package windmove
+  :general
+  (mapleader
+    "w" '(:ignore t :which-key "Window operations.")
+    "wh" 'windmove-left
+    "wl" 'windmove-right
+    "wk" 'windmove-up
+    "wj" 'windmove-down))
+
+(use-package winner
+  :custom
+  (winner-mode t)
+  :general
+  (mapleader
+    "wr" '(winner-redo :Which-key "Redo a window configuration.")
+    "wu" '(winner-redo :which-key "Redo a window configuration.")))
+(mapleader
+  "wo" '(other-window :which-key "Go to the other window."))
 
 (use-package orderless
   :ensure t
@@ -303,7 +340,7 @@ Usually it is the form of speechd-speak-read-<thing>"
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 
-(customize-set-variable 'indent-tabs-mode nil)
+(setopt indent-tabs-mode nil)
 
 (use-package eldoc
   :init
@@ -326,7 +363,6 @@ If the documentation strings are the same as before, i.e., the symbol has not ch
   (remove-hook 'eldoc-display-functions #'eldoc-display-in-echo-area))
 
 (use-package eglot
-  :ensure t
   :custom
   (eglot-autoshutdown t)
   :general
@@ -336,23 +372,12 @@ If the documentation strings are the same as before, i.e., the symbol has not ch
     "l" '(:ignore t :which-key "LSP.")
     "la" '(:ignore t :which-key "LSP actions.")
     "laa" '(eglot-code-actions :which-key "Code actions.")
-    "lae" '(eglot-code-action-extract)
+    "lae" 'eglot-code-action-extract
     "laf" '(eglot-format :which-key "Format the highlighted region.")
     "laF" '(eglot-format-buffer :which-key "Format the current buffer.")
-    "lai" '(eglot-code-action-inline)
+    "lai" 'eglot-code-action-inline
     "lao" '(eglot-code-action-organize-imports :which-key "Organize your imports.")
-    "laq" '(eglot-code-action-quickfix)
+    "laq" 'eglot-code-action-quickfix
     "lar" '(eglot-rename :which-key "Rename the symbol under point.")
-    "laR" '(eglot-code-action-rewrite)
+    "laR" 'eglot-code-action-rewrite
     "lr" '(eglot-reconnect :which-key "Reconnect to the LSP server.")))
-
-(setc user-full-name "Hunter Jozwiak"
-      user-mail-address "hunter.t.joz@gmail.com"
-      user-login-name "sektor")
-
-(setc use-short-answers t)
-
-(use-package autorevert
-  :custom
-  (auto-revert-interval 0.1)
-  (global-auto-revert-mode t))

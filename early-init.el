@@ -7,6 +7,3 @@ menu-bar-mode nil)
 (push '(vertical-scroll-bars) default-frame-alist)
 
 (setq load-prefer-newer 'noninteractive)
-
-(customize-set-variable 'package-quickstart-file (expand-file-name "var/package-quickstart.el" user-emacs-directory))
-(customize-set-variable 'package-quickstart t)

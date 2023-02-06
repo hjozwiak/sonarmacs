@@ -46,11 +46,6 @@ For our purposes, we don't really need to have the toolbars or menu bars active 
 #+begin_src emacs-lisp
   (setq load-prefer-newer 'noninteractive)
 #+end_src
-** Quickstart the Package System
-#+begin_src emacs-lisp
-  (customize-set-variable 'package-quickstart-file (expand-file-name "var/package-quickstart.el" user-emacs-directory))
-  (customize-set-variable 'package-quickstart t)
-#+end_src
 * Initialization File
 :properties:
 :header-args:emacs-lisp: :tangle ./init.el :lexical yes
@@ -65,6 +60,12 @@ There are many ways in which to customize Emacs:
 
 The initial configuration will be a literate config. In so doing, we can both provide the code that Emacs Will run in addition to providing further user-facing documentation.
 ** The Package System
+*** Quickstart the Package System
+#+begin_src emacs-lisp
+    ;; -*- lexical-binding: t; -*-
+  (setopt package-quickstart-file (expand-file-name "var/package-quickstart.el" user-emacs-directory)
+          package-quickstart t)
+#+end_src
 *** Configuring Sources
 There are three package sources that we use by default:
 - Melpa :: The place that has the most packages, which I have been using for years now.
@@ -72,7 +73,6 @@ There are three package sources that we use by default:
 - non-GNU ELPA :: The repository for packages that don't quite meet the FSF guidelines.
 
 #+begin_src emacs-lisp
-  ;; -*- lexical-binding: t; -*-
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
   #+end_src
@@ -82,17 +82,14 @@ There are three package sources that we use by default:
 #+end_src
 ** use-package Installation
 #+begin_src emacs-lisp
-  (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
-  (customize-set-variable 'use-package-compute-statistics t)
-  (customize-set-variable 'use-package-always-demand t)
+  (setopt use-package-compute-statistics t
+          use-package-always-demand t)
   (require 'use-package)
 #+end_src
 ** speechd-el
 The configuration of speechd-el is quite immense, so this section is meant more as a guide as to how to do it rather than something that is set in stone; feel free to tweak things to your liking.
 #+begin_src emacs-lisp
   (use-package speechd-el
-  :commands speechd-speak
     :ensure t
     :custom
      (speechd-speak-whole-line t)
@@ -176,6 +173,7 @@ General is a nifty utility for easily defining keybindings, as well as having so
      "fs" '(save-buffer :which-key "Save your currently opened file.")
      "ff" '(find-file :which-key "Find a file.")
      "fd" '(dired :which-key "Open a dired buffer.")
+     "fr" '(recentf-open-files :which-key "Open a recent file.")
      ;; Frame operations
      "F" '(:ignore t "Frames.")
      "Fd" '(delete-frame :which-key "Delete this frame.")
@@ -313,6 +311,57 @@ For going back through previous revisions of a file.
     :ensure t
     :hook (magit-mode . turn-on-magit-gitflow))
 #+end_src
+** Emacs Internals
+*** User Information
+Tell Emacs who you are, as well as some other things.
+#+begin_src emacs-lisp
+  (setopt user-full-name "Hunter Jozwiak"
+        user-mail-address "hunter.t.joz@gmail.com"
+        user-login-name "sektor")
+#+end_src
+*** Short Ansers
+When Emacs pops up a dialog for serious actions, such as deleting a file, it will expect an answer that is either yes or no, instead of the y or n prompt. The use-short-answers allows those prompts to be answered with either y or n.
+#+begin_src emacs-lisp
+  (setopt use-short-answers t)
+#+end_src
+*** Autoreverting Buffers
+#+begin_src emacs-lisp
+  (use-package autorevert
+    :custom
+    (auto-revert-interval 0.1)
+    (global-auto-revert-mode t))
+#+end_src
+*** Saving Command History
+#+begin_src emacs-lisp
+  (use-package savehist
+    :custom(savehist-mode t))
+#+end_src
+*** Recent Files
+#+begin_src emacs-lisp
+  (use-package recentf
+    :custom(recentf-mode t))
+#+end_src
+*** Window Motions
+#+begin_src emacs-lisp
+  (use-package windmove
+    :general
+    (mapleader
+      "w" '(:ignore t :which-key "Window operations.")
+      "wh" 'windmove-left
+      "wl" 'windmove-right
+      "wk" 'windmove-up
+      "wj" 'windmove-down))
+
+  (use-package winner
+    :custom
+    (winner-mode t)
+    :general
+    (mapleader
+      "wr" '(winner-redo :Which-key "Redo a window configuration.")
+      "wu" '(winner-redo :which-key "Redo a window configuration.")))
+  (mapleader
+    "wo" '(other-window :which-key "Go to the other window."))
+#+end_src
 ** Completion
 *** The Orderless Framework
 #+begin_src emacs-lisp
@@ -447,7 +496,7 @@ For useful annotations, not sure exactly how useful this will be.
 *** No Indent of Tabs
 I don't really care for tabs, so let's turn it off.
 #+begin_src emacs-lisp
-  (customize-set-variable 'indent-tabs-mode nil)
+  (setopt indent-tabs-mode nil)
 #+end_src
 *** Eldoc Tweaks
 By default, Eldoc is really spammy. Let's have it write to a buffer instead, and read from that buffer when things are changed.
@@ -479,7 +528,6 @@ This will be built into Emacs as of version 29, but we can take advantage of it 
 In short, eglot is a bridge from Emacs to many LSP servers (rust-analyzer, Solargraph, etc). It aims to be lightweight and make use of Emacs internals (eldoc, flymake, xref, and friends).
 #+begin_src emacs-lisp
   (use-package eglot
-    :ensure t
     :custom
     (eglot-autoshutdown t)
     :general
@@ -489,33 +537,13 @@ In short, eglot is a bridge from Emacs to many LSP servers (rust-analyzer, Solar
       "l" '(:ignore t :which-key "LSP.")
       "la" '(:ignore t :which-key "LSP actions.")
       "laa" '(eglot-code-actions :which-key "Code actions.")
-      "lae" '(eglot-code-action-extract)
+      "lae" 'eglot-code-action-extract
       "laf" '(eglot-format :which-key "Format the highlighted region.")
       "laF" '(eglot-format-buffer :which-key "Format the current buffer.")
-      "lai" '(eglot-code-action-inline)
+      "lai" 'eglot-code-action-inline
       "lao" '(eglot-code-action-organize-imports :which-key "Organize your imports.")
-      "laq" '(eglot-code-action-quickfix)
+      "laq" 'eglot-code-action-quickfix
       "lar" '(eglot-rename :which-key "Rename the symbol under point.")
-      "laR" '(eglot-code-action-rewrite)
+      "laR" 'eglot-code-action-rewrite
       "lr" '(eglot-reconnect :which-key "Reconnect to the LSP server.")))
-#+end_src
-** Emacs Internals
-*** User Information
-Tell Emacs who you are, as well as some other things.
-#+begin_src emacs-lisp
-  (setc user-full-name "Hunter Jozwiak"
-        user-mail-address "hunter.t.joz@gmail.com"
-        user-login-name "sektor")
-#+end_src
-*** Short Ansers
-When Emacs pops up a dialog for serious actions, such as deleting a file, it will expect an answer that is either yes or no, instead of the y or n prompt. The use-short-answers allows those prompts to be answered with either y or n.
-#+begin_src emacs-lisp
-  (setc use-short-answers t)
-#+end_src
-*** Autoreverting Buffers
-#+begin_src emacs-lisp
-  (use-package autorevert
-    :custom
-    (auto-revert-interval 0.1)
-    (global-auto-revert-mode t))
 #+end_src
