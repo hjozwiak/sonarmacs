@@ -23,15 +23,6 @@
 :config
 (speechd-speak))
 
-(defun retrieve-speechd-function (thing)
-  "Retrieve the function that is defined by speechd-el.
-
-Usually it is the form of speechd-speak-read-<thing>"
-  (cl-loop for s being the symbols
-           when (string-match (concat "speechd-speak-read-" thing) (symbol-name s))
-           when (fboundp s)
-           return s))
-
 (use-package no-littering
   :ensure t
   :hook (after-init . (lambda () (load custom-file)))

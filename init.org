@@ -3,7 +3,7 @@
 #+description: Configuration and documentation for the Sonarmacs environment
 #+language: en
 #+startup: fold
-
+#+seq_todo: TODO DRAFT DONE(!)
 * Introduction
 This is a configuration for Emacs based on the speech dispatcher software, which is a utility for providing speech output for blind and visually impaired persons. Additionally, Braille support is provided with the brltty software.
 ** Required System Packages
@@ -100,19 +100,6 @@ The configuration of speechd-el is quite immense, so this section is meant more 
                              (output-module . "espeak-ng"))))
   :config
   (speechd-speak))
-#+end_src
-*** Helper Functions
-**** Retrieve a Reading Function
-In order to make definers for use-package, we need to first make functions that will return functions that are defined in speechd-speak. For example, the reading functions speechd-speak-read-paragraph, sentence, etc.
-#+begin_src emacs-lisp
-  (defun retrieve-speechd-function (thing)
-    "Retrieve the function that is defined by speechd-el.
-
-  Usually it is the form of speechd-speak-read-<thing>"
-    (cl-loop for s being the symbols
-             when (string-match (concat "speechd-speak-read-" thing) (symbol-name s))
-             when (fboundp s)
-             return s))
 #+end_src
 ** No Littering
 By default, Emacs will pollute your configuration directory with various auto-save, cache and configuration files. The aim of the no littering package is to keep the configuration directory relatively clean, by putting persistant information into the var subdirectory and configuration files in etc.
