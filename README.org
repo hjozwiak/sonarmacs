@@ -173,6 +173,7 @@ General is a nifty utility for easily defining keybindings, as well as having so
      "hdF" '(describe-face :which-key "Describe a face.")
      "hdk" '(describe-key :which-key "Describe what a key is bound to.")
      "hdp" '(describe-package :which-key "Describe a package.")
+     "hdv" '(describe-variable :which-key "Describe a variable.")
      ;; Info manuals
      "hi" '(:ignore t :which-key "Info")
      "hia" '(info-apropos :which-key "Search the info database.")
@@ -183,8 +184,6 @@ General is a nifty utility for easily defining keybindings, as well as having so
       :prefix ","
       :global-prefix "SPC m"
       :states '(normal visual)))
-  ;; Aliases
-  (defalias 'setc #'general-setq "A convenience alias for setting customizable variables.")
 #+end_src
 ** Evil Mode
 Evil is a system for providing vim-like keybindings in Emacs.

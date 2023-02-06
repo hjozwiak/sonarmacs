@@ -86,6 +86,7 @@
    "hdF" '(describe-face :which-key "Describe a face.")
    "hdk" '(describe-key :which-key "Describe what a key is bound to.")
    "hdp" '(describe-package :which-key "Describe a package.")
+   "hdv" '(describe-variable :which-key "Describe a variable.")
    ;; Info manuals
    "hi" '(:ignore t :which-key "Info")
    "hia" '(info-apropos :which-key "Search the info database.")
@@ -96,8 +97,6 @@
     :prefix ","
     :global-prefix "SPC m"
     :states '(normal visual)))
-;; Aliases
-(defalias 'setc #'general-setq "A convenience alias for setting customizable variables.")
 
 (use-package undo-tree
   :custom
