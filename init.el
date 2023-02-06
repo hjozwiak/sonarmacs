@@ -1,13 +1,5 @@
-;; -*- lexical-binding: t; -*-
-(setopt package-quickstart-file (expand-file-name "var/package-quickstart.el" user-emacs-directory)
-        package-quickstart t)
-
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-
-(customize-set-variable 'package-archive-priorities '(("melpa" . 10) ("gnu" . 9) ("nongnu" . 8)))
-
 (unless (fboundp 'setopt)
+  (require 'wid-edit)
   (defmacro setopt (&rest pairs)
   "Set VARIABLE/VALUE pairs, and return the final VALUE.
 This is like `setq', but is meant for user options instead of
@@ -21,9 +13,9 @@ plain variables.  This means that `setopt' will execute any
   (let ((expr nil))
     (while pairs
       (unless (symbolp (car pairs))
-        (error "Attempting to set a non-symbol: %s" (car pairs)))
+	(error "Attempting to set a non-symbol: %s" (car pairs)))
       (push `(setopt--set ',(car pairs) ,(cadr pairs))
-            expr)
+	    expr)
       (setq pairs (cddr pairs)))
     (macroexp-progn (nreverse expr))))
 (defun setopt--set (variable value)
@@ -34,6 +26,15 @@ plain variables.  This means that `setopt' will execute any
       (warn "Value `%S' does not match type %s" value type)))
   (put variable 'custom-check-value (list value))
   (funcall (or (get variable 'custom-set) #'set-default) variable value)))
+
+;; -*- lexical-binding: t; -*-
+(setopt package-quickstart-file (expand-file-name "var/package-quickstart.el" user-emacs-directory)
+        package-quickstart t)
+
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+
+(customize-set-variable 'package-archive-priorities '(("melpa" . 10) ("gnu" . 9) ("nongnu" . 8)))
 
 (unless (and (version< emacs-version "29.0") (package-installed-p 'use-package))
   (package-install 'use-package))

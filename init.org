@@ -59,6 +59,41 @@ There are many ways in which to customize Emacs:
 - Or maybe have one giant configuration file.
 
 The initial configuration will be a literate config. In so doing, we can both provide the code that Emacs Will run in addition to providing further user-facing documentation.
+** Define a Setup Macro Should It Be Needed
+In Emacs 29, there exists a setopt macro that works like setq, but is meant for user-customizeable variables.
+
+It replaces general-setq, which aims to be a similar interface.
+#+begin_src emacs-lisp
+  (unless (fboundp 'setopt)
+    (require 'wid-edit)
+    (defmacro setopt (&rest pairs)
+    "Set VARIABLE/VALUE pairs, and return the final VALUE.
+  This is like `setq', but is meant for user options instead of
+  plain variables.  This means that `setopt' will execute any
+  `custom-set' form associated with VARIABLE.
+
+  \(fn [VARIABLE VALUE]...)"
+    (declare (debug setq))
+    (unless (zerop (mod (length pairs) 2))
+      (error "PAIRS must have an even number of variable/value members"))
+    (let ((expr nil))
+      (while pairs
+	(unless (symbolp (car pairs))
+	  (error "Attempting to set a non-symbol: %s" (car pairs)))
+	(push `(setopt--set ',(car pairs) ,(cadr pairs))
+	      expr)
+	(setq pairs (cddr pairs)))
+      (macroexp-progn (nreverse expr))))
+  (defun setopt--set (variable value)
+    (custom-load-symbol variable)
+    ;; Check that the type is correct.
+    (when-let ((type (get variable 'custom-type)))
+      (unless (widget-apply (widget-convert type) :match value)
+	(warn "Value `%S' does not match type %s" value type)))
+    (put variable 'custom-check-value (list value))
+    (funcall (or (get variable 'custom-set) #'set-default) variable value)))
+
+#+end_src 
 ** The Package System
 *** Quickstart the Package System
 #+begin_src emacs-lisp
@@ -80,40 +115,6 @@ There are three package sources that we use by default:
 #+begin_src emacs-lisp
   (customize-set-variable 'package-archive-priorities '(("melpa" . 10) ("gnu" . 9) ("nongnu" . 8)))
 #+end_src
-** Define a Setup Macro Should It Be Needed
-In Emacs 29, there exists a setopt macro that works like setq, but is meant for user-customizeable variables.
-
-It replaces general-setq, which aims to be a similar interface.
-#+begin_src emacs-lisp
-  (unless (fboundp 'setopt)
-    (defmacro setopt (&rest pairs)
-    "Set VARIABLE/VALUE pairs, and return the final VALUE.
-  This is like `setq', but is meant for user options instead of
-  plain variables.  This means that `setopt' will execute any
-  `custom-set' form associated with VARIABLE.
-
-  \(fn [VARIABLE VALUE]...)"
-    (declare (debug setq))
-    (unless (zerop (mod (length pairs) 2))
-      (error "PAIRS must have an even number of variable/value members"))
-    (let ((expr nil))
-      (while pairs
-        (unless (symbolp (car pairs))
-          (error "Attempting to set a non-symbol: %s" (car pairs)))
-        (push `(setopt--set ',(car pairs) ,(cadr pairs))
-              expr)
-        (setq pairs (cddr pairs)))
-      (macroexp-progn (nreverse expr))))
-  (defun setopt--set (variable value)
-    (custom-load-symbol variable)
-    ;; Check that the type is correct.
-    (when-let ((type (get variable 'custom-type)))
-      (unless (widget-apply (widget-convert type) :match value)
-        (warn "Value `%S' does not match type %s" value type)))
-    (put variable 'custom-check-value (list value))
-    (funcall (or (get variable 'custom-set) #'set-default) variable value)))
-
-#+end_src 
 ** use-package Installation
 use-package is a configuration macro that allows for easy installation, customization, and further configuration of packages.
 
